@@ -6,7 +6,7 @@
 
 %%
 
-[a-zA-Z0-9 \t\n]+   yylval.value = yytext; return TEXT;
+[a-zA-Z0-9 \t\n]+   yylval.value = strdup(yytext); return TEXT;
 "\*\*"			 	return BOLD;
 
 %%
