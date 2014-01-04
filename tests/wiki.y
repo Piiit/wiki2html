@@ -14,18 +14,22 @@
 %token BOLD
 
 %type <value> line
+%type <value> text
 
 %start lines
 
 %%
 
 lines : /* empty */
-	  | lines line {printf("%s\n", $2);}
+	  | lines line
 	  ;
 
-line : BOLD TEXT BOLD	{$$ = $<value>2;}
-	 | TEXT 			{$$ = $1;}
+line : BOLD text BOLD	{$$ = $2; printf("BOLD %s\n", $2);}
+	 | text 			{$$ = $1; printf("SIMPLE %s\n", $1);}
      ;
+
+text : TEXT				{$$ = $1; printf("TEXT %s\n", $1);}
+	 ; 
 
 %%
 
