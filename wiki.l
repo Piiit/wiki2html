@@ -4,24 +4,13 @@
 #include <string.h>
 %}
 
-/* Generics */
-DIGIT           [0-9]
-DIGITS          {DIGIT}*
-LETTER          [a-zA-Z]
-WS              [ \t\n]+
-TEXT            ({LETTER}|{DIGIT}|{WS})+
-/* Comments */
-ONEC            \/\/.*
-MULTIC          "/*"([^/]|"/"[^*])*"*/"
-/* Formatting */
-BOLD            \*\*
-ITALIC          \/\/
-UNDERLINE       __
-MONOSPACE       \'\'
-/* Identifiers and strings */
-STRING          \".*\"
-/* Usual identifier, start with at least 1 letter */
-IDENTIFIER      {LETTER}({LETTER}|{DIGIT}|[_-])*
+DIGIT    		[0-9]
+LETTER   		[a-zA-Z]
+WS		 		[ \t\n]+
+TEXT	 		({LETTER}|{DIGIT}|{WS})+
+BOLD			\*\*
+ITALIC			\/\/
+UNDERLINE		__
 
 %%
 
