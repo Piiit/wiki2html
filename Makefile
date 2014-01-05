@@ -21,4 +21,4 @@ debug:
 .PHONY: clean
 
 clean:
-	rm -f *.o *~ $(NAME) y.tab.c y.tab.h lex.yy.c y.output debug
+	rm -f *.o *~ $(NAME) y.tab.c y.tab.h lex.yy.c y.output

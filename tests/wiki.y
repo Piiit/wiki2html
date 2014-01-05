@@ -14,6 +14,9 @@
 %token BOLD
 %token ITALIC
 
+%right BOLD
+%right ITALIC
+
 %type <value> formatting
 %type <value> entry
 
@@ -36,8 +39,8 @@ formatting : BOLD formatting BOLD {char buf[1024]; snprintf(buf, sizeof buf, "<b
             | ITALIC formatting ITALIC {char buf[1024]; snprintf(buf, sizeof buf, "<i>%s</i>", $2); $$ = strdup(buf);}
             | BOLD formatting {char buf[1024]; snprintf(buf, sizeof buf, "<b>%s</b>", $2); $$ = strdup(buf);}
             | ITALIC formatting {char buf[1024]; snprintf(buf, sizeof buf, "<i>%s</i>", $2); $$ = strdup(buf);}
-/*            | formatting ITALIC {char buf[1024]; snprintf(buf, sizeof buf, "<b>%s</b>", $1); $$ = strdup(buf);}
-            | formatting BOLD {char buf[1024]; snprintf(buf, sizeof buf, "<i>%s</i>", $1); $$ = strdup(buf);}*/
+            | formatting ITALIC {char buf[1024]; snprintf(buf, sizeof buf, "<i>%s</i>", $1); $$ = strdup(buf);}
+            | formatting BOLD {char buf[1024]; snprintf(buf, sizeof buf, "<b>%s</b>", $1); $$ = strdup(buf);}
             | TEXT {$$ = strdup($1);}
             ;
 
