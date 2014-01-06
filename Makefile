@@ -12,7 +12,7 @@ $(NAME):
 	$(YACC) -vd $(NAME).y
 #	-v: generates the DFA
 #	-d: generate the y.tab.h file
-	$(CC) -o $@ $^ y.tab.c -ly -ll
+	$(CC) -o $@ $^ y.tab.c symbol_table.c -ly -ll
 
 # *To see the moves of the parser:
 debug:
@@ -21,4 +21,4 @@ debug:
 .PHONY: clean
 
 clean:
-	rm -f *.o *~ $(NAME) y.tab.c y.tab.h lex.yy.c y.output
+	rm -f *.o *~ $(NAME) y.tab.c y.tab.h lex.yy.c y.output symbol_table.o

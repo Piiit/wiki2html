@@ -3,6 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+
+#include "symbol_table.h"
 %}
 
 %union {
@@ -125,3 +127,17 @@ monospace_content
 %%
 
 #include "lex.yy.c"
+
+int main(void)
+{
+    /* Symbol table initialization and test */
+    struct wiki_node* table;
+    if (symbol_table_init(table))
+        printf("Unable to allocate memory for symbol table!");
+// TODO FIX WARN strange segmentation fault here...hum hum
+//    table->lexeme = "BOLD";
+//    printf("%s", table->lexeme);
+    symbol_table_free();
+    int err = yyparse();
+    return err;
+}
