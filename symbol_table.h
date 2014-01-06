@@ -28,11 +28,11 @@ struct wiki_node {
 /* Initialize the symbol table and return it
  * If the table is already initialized, then just return the pointer to the first entry
  */
-int symbol_table_init(struct wiki_node* node);
+struct wiki_node* symbol_table_init(void);
 /* Initialize the global scope and return it
  * If the scope is already initialized, then just return the global scope
  */
 int scope_init(struct wiki_scope* node);
 void add_keyword(char* keyword);
-void scope_free();
-void symbol_table_free();
+void scope_free(void);
+void symbol_table_free(void);

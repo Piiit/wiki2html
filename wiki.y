@@ -132,11 +132,9 @@ int main(void)
 {
     /* Symbol table initialization and test */
     struct wiki_node* table;
-    if (symbol_table_init(table))
+    table = symbol_table_init();
+    if (table == NULL)
         printf("Unable to allocate memory for symbol table!");
-// TODO FIX WARN strange segmentation fault here...hum hum
-//    table->lexeme = "BOLD";
-//    printf("%s", table->lexeme);
     symbol_table_free();
     int err = yyparse();
     return err;

@@ -5,18 +5,13 @@
 static struct wiki_node* symbol_table = NULL;
 static struct wiki_scope* global_scope = NULL;
 
-int symbol_table_init(struct wiki_node* node)
+struct wiki_node* symbol_table_init(void)
 {
     if (symbol_table == NULL)
     {
         symbol_table = malloc(sizeof(symbol_table));
-        if (symbol_table == NULL) {
-            return 1;
-        }
     }
-    node = symbol_table;
-        node->lexeme = "";
-    return 0;
+    return symbol_table;
 }
 
 void symbol_table_free()
