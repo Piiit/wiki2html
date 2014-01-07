@@ -44,19 +44,19 @@ wikitext
 	;
 
 block
-	: block_text {$$->lexeme = strdup($1->lexeme);}
+	: block_text
 	;
 
 block_text
-	: bold {$$->lexeme = strdup($1->lexeme);}
-	| italic {$$->lexeme = strdup($1->lexeme);}
-	| monospace {$$->lexeme = strdup($1->lexeme);}
-	| underline {$$->lexeme = strdup($1->lexeme);}
-	| text {$$->lexeme = strdup($1->lexeme);}
+	: bold
+	| italic
+	| monospace
+	| underline
+	| text
 	;
 
 text
-	: TEXT {$$->lexeme = strdup($1->lexeme);}
+	: TEXT
 	;
 
 bold
@@ -64,14 +64,14 @@ bold
 	;
 
 bold_parts
-	: text {$$->lexeme = strdup($1->lexeme);}
-	| italic {$$->lexeme = strdup($1->lexeme);}
-	| underline {$$->lexeme = strdup($1->lexeme);}
-	| monospace {$$->lexeme = strdup($1->lexeme);}
+	: text
+	| italic
+	| underline
+	| monospace
 	;
 
 bold_content
-	: bold_parts {$$->lexeme = strdup($1->lexeme);}
+	: bold_parts
 	| bold_content bold_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
 	;
 
@@ -80,14 +80,14 @@ italic
 	;
 
 italic_parts
-	: text {$$->lexeme = strdup($1->lexeme);}
-	| bold {$$->lexeme = strdup($1->lexeme);}
-	| underline {$$->lexeme = strdup($1->lexeme);}
-	| monospace {$$->lexeme = strdup($1->lexeme);}
+	: text
+	| bold
+	| underline
+	| monospace
 	;
 
 italic_content 
-	: italic_parts {$$->lexeme = strdup($1->lexeme);}
+	: italic_parts
 	| italic_content italic_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
 	;
 
@@ -96,14 +96,14 @@ underline
 	;
 
 underline_parts 
-	: text {$$->lexeme = strdup($1->lexeme);}
-	| bold {$$->lexeme = strdup($1->lexeme);}
-	| italic {$$->lexeme = strdup($1->lexeme);}
-	| monospace {$$->lexeme = strdup($1->lexeme);}
+	: text
+	| bold
+	| italic
+	| monospace
 	;
 
 underline_content 
-	: underline_parts {$$->lexeme = strdup($1->lexeme);}
+	: underline_parts
 	| underline_content underline_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
 	;
 
@@ -112,14 +112,14 @@ monospace
 	;
 
 monospace_parts 
-	: text {$$->lexeme = strdup($1->lexeme);}
-	| bold {$$->lexeme = strdup($1->lexeme);}
-	| italic {$$->lexeme = strdup($1->lexeme);}
-	| underline {$$->lexeme = strdup($1->lexeme);}
+	: text
+	| bold
+	| italic
+	| underline
 	;
 
 monospace_content 
-	: monospace_parts {$$->lexeme = strdup($1->lexeme);}
+	: monospace_parts
 	| monospace_content monospace_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
 	;
 
