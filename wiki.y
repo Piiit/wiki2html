@@ -19,7 +19,7 @@
 
 
 %type <node> block
-%type <node> text_block
+%type <node> block_text
 %type <node> text
 %type <node> bold
 %type <node> bold_content
