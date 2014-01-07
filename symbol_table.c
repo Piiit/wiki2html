@@ -22,3 +22,14 @@ void symbol_table_free()
         symbol_table = NULL;
     }
 }
+
+struct wiki_node* get_new_node(void)
+{
+    struct wiki_node* node = malloc(sizeof(struct wiki_node));
+    if (node)
+    {
+        node->next = NULL;
+        node->scope = NULL;
+    }
+    return node;
+}

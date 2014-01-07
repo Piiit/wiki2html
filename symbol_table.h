@@ -10,6 +10,8 @@
 
  */
 
+#ifndef SYMBOL_TABLE_H
+#define SYMBOL_TABLE_H
 
 struct wiki_scope {
     /* Linked list... */
@@ -19,11 +21,14 @@ struct wiki_scope {
 /* node of a symbol table (keyword, variable...) */
 struct wiki_node {
     // TODO make it dynamic (for example a simple linked list of characters, or just using OS provided malloc())
-    char*         lexeme;
-    struct wiki_scope   *scope;
+    char*               lexeme;
+    char*               value;
+    struct wiki_scope*  scope;
     /* Linked list... */
     struct wiki_node*   next;
 };
+
+struct wiki_node* get_new_node(void);
 
 /* Initialize the symbol table and return it
  * If the table is already initialized, then just return the pointer to the first entry
@@ -36,3 +41,5 @@ int scope_init(struct wiki_scope* node);
 void add_keyword(char* keyword);
 void scope_free(void);
 void symbol_table_free(void);
+
+#endif /* SYMBOL_TABLE_H */
