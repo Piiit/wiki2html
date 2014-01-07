@@ -47,5 +47,7 @@ int scope_init(struct wiki_scope* node);
 void add_keyword(char* keyword);
 void scope_free(void);
 void symbol_table_free(void);
+void add_symbol(struct wiki_node* root, struct wiki_node* node);
+void print_symbol_table(struct wiki_node* root);
 
 #endif /* SYMBOL_TABLE_H */

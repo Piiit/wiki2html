@@ -6,6 +6,8 @@
 
 #include "symbol_table.h"
 
+struct wiki_node* table;
+
 /* It practically combines strings, creating a fresh char memory blob */
 // TODO this is fukin' pure hackin', do a variable parameter number version ;)
 char* produce_output(char* start, char* content, char* end)
@@ -56,11 +58,11 @@ char* produce_output(char* start, char* content, char* end)
 
 wikitext
 	: /* empty */
-	| wikitext block {printf("%s", $2->value);}
+	| wikitext block { printf("%s", $2->value);}
 	;
 
 block
-	: block_text
+	: block_text { add_symbol(table, $1); }
 	;
 
 block_text
@@ -92,7 +94,7 @@ bold_content
 	;
 
 italic
-	: ITALIC italic_content ITALIC { $$->value = produce_output("<i>", $2->value, "</i>"); }  		
+	: ITALIC italic_content ITALIC { $$->value = produce_output("<i>", $2->value, "</i>"); }
 	;
 
 italic_parts
@@ -143,14 +145,16 @@ monospace_content
 
 #include "lex.yy.c"
 
+
+
 int main(void)
 {
     /* Symbol table initialization and test */
-    struct wiki_node* table;
     table = symbol_table_init();
     if (table == NULL)
-        printf("Unable to allocate memory for symbol table!");
-    symbol_table_free();
+        printf("Unable to allocate memory for symbol table!\n");
     int err = yyparse();
+    print_symbol_table(table);
+    symbol_table_free();
     return err;
 }

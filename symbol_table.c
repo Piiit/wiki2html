@@ -9,7 +9,7 @@ struct wiki_node* symbol_table_init(void)
 {
     if (symbol_table == NULL)
     {
-        symbol_table = malloc(sizeof(symbol_table));
+        symbol_table = get_new_node();
     }
     return symbol_table;
 }
@@ -36,3 +36,28 @@ struct wiki_node* get_new_node(void)
     }
     return node;
 }
+
+void add_symbol(struct wiki_node* root, struct wiki_node* node)
+{
+    struct wiki_node* current = root;
+    if (current->next != NULL)
+        do {
+            current = current->next;
+        }
+        while (current->next != NULL);
+    current->next = node;
+}
+
+void print_symbol_table(struct wiki_node* root)
+{
+    struct wiki_node* current = root;
+    if (current->next != NULL)
+        do {
+            current = current->next;
+            printf("%s -> %s\n", current->lexeme, current->value);
+        }
+        while (current->next != NULL);
+    else
+        printf("%s -> %s\n", current->lexeme, current->value);
+}
+
