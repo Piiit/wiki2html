@@ -18,8 +18,8 @@
 %token UNDERLINE
 
 
-%type <node> paragraph
-%type <node> text_paragraph
+%type <node> block
+%type <node> text_block
 %type <node> text
 %type <node> bold
 %type <node> bold_content
@@ -38,16 +38,16 @@
 
 %%
 
-wikitext 
+wikitext
 	: /* empty */
-	| wikitext paragraph {printf("TEXT = %s\n", $2->lexeme);}
+	| wikitext block {printf("TEXT = %s\n", $2->lexeme);}
 	;
 
-paragraph 
-	: text_paragraph {$$->lexeme = strdup($1->lexeme);}
+block
+	: block_text {$$->lexeme = strdup($1->lexeme);}
 	;
 
-text_paragraph 
+block_text
 	: bold {$$->lexeme = strdup($1->lexeme);}
 	| italic {$$->lexeme = strdup($1->lexeme);}
 	| monospace {$$->lexeme = strdup($1->lexeme);}
@@ -55,31 +55,31 @@ text_paragraph
 	| text {$$->lexeme = strdup($1->lexeme);}
 	;
 
-text 
+text
 	: TEXT {$$->lexeme = strdup($1->lexeme);}
-	; 
+	;
 
-bold 
+bold
 	: BOLD bold_content BOLD {char buf[1024]; snprintf(buf, sizeof buf, "<b>%s</b>", $2->lexeme); $$->lexeme = strdup(buf);}
 	;
 
-bold_parts 
+bold_parts
 	: text {$$->lexeme = strdup($1->lexeme);}
 	| italic {$$->lexeme = strdup($1->lexeme);}
 	| underline {$$->lexeme = strdup($1->lexeme);}
 	| monospace {$$->lexeme = strdup($1->lexeme);}
 	;
 
-bold_content 
+bold_content
 	: bold_parts {$$->lexeme = strdup($1->lexeme);}
 	| bold_content bold_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
 	;
 
-italic 
+italic
 	: ITALIC italic_content ITALIC {char buf[1024]; snprintf(buf, sizeof buf, "<i>%s</i>", $2->lexeme); $$->lexeme = strdup(buf);}  		
 	;
 
-italic_parts 
+italic_parts
 	: text {$$->lexeme = strdup($1->lexeme);}
 	| bold {$$->lexeme = strdup($1->lexeme);}
 	| underline {$$->lexeme = strdup($1->lexeme);}
