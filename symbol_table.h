@@ -20,23 +20,24 @@ struct wiki_scope {
 
 /* node of a symbol table (keyword, variable...) */
 struct wiki_node {
-    // TODO make it dynamic (for example a simple linked list of characters, or just using OS provided malloc())
     char*               lexeme;
     char*               value;
+    int                 type;
     struct wiki_scope*  scope;
     /* Linked list... */
     struct wiki_node*   next;
 };
 
-struct wiki_node* get_new_node(void);
-
 /* Initialize the symbol table and return it
  * If the table is already initialized, then just return the pointer to the first entry
  */
 struct wiki_node* symbol_table_init(void);
+/* Allocate a new node, with default (clean) fields */
+struct wiki_node* get_new_node(void);
 /* Initialize the global scope and return it
  * If the scope is already initialized, then just return the global scope
  */
+struct wiki_node* get_new_node(void);
 int scope_init(struct wiki_scope* node);
 void add_keyword(char* keyword);
 void scope_free(void);

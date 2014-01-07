@@ -28,6 +28,9 @@ struct wiki_node* get_new_node(void)
     struct wiki_node* node = malloc(sizeof(struct wiki_node));
     if (node)
     {
+        node->lexeme = NULL;
+        node->value = NULL;
+        node->type = -1;
         node->next = NULL;
         node->scope = NULL;
     }
