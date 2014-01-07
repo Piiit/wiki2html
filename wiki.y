@@ -5,6 +5,22 @@
 #include <stdio.h>
 
 #include "symbol_table.h"
+
+/* It practically combines strings, creating a fresh char memory blob */
+char* produce_output(char* start, char* content, char* end)
+{
+    int extra = 0;
+    int start_pointer = 0;
+    char* result;
+    if (start) extra+=strlen(start);
+    if (end) extra+=strlen(end);
+    if (content) extra+=strlen(content);
+    result = malloc(extra);
+    if (start) strcat(result, start);
+    if (content) strcat(result, content);
+    if (end) strcat(result, end);
+    return result;
+}
 %}
 
 %union {
@@ -60,7 +76,7 @@ text
 	;
 
 bold
-	: BOLD bold_content BOLD {char buf[1024]; snprintf(buf, sizeof buf, "<b>%s</b>", $2->lexeme); $$->lexeme = strdup(buf);}
+	: BOLD bold_content BOLD { $$->lexeme = produce_output("<b>", $2->lexeme, "</b>"); }
 	;
 
 bold_parts
@@ -72,11 +88,11 @@ bold_parts
 
 bold_content
 	: bold_parts
-	| bold_content bold_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
+	| bold_content bold_parts { $$->lexeme = produce_output($$->lexeme, $2->lexeme, NULL); }
 	;
 
 italic
-	: ITALIC italic_content ITALIC {char buf[1024]; snprintf(buf, sizeof buf, "<i>%s</i>", $2->lexeme); $$->lexeme = strdup(buf);}  		
+	: ITALIC italic_content ITALIC { $$->lexeme = produce_output("<i>", $2->lexeme, "</i>"); }  		
 	;
 
 italic_parts
@@ -88,11 +104,11 @@ italic_parts
 
 italic_content 
 	: italic_parts
-	| italic_content italic_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
+	| italic_content italic_parts { $$->lexeme = produce_output($$->lexeme, $2->lexeme, NULL); }
 	;
 
 underline 
-	: UNDERLINE underline_content UNDERLINE {char buf[1024]; snprintf(buf, sizeof buf, "<span style='text-decoration: underline;'>%s</span>", $2->lexeme); $$->lexeme = strdup(buf);}  		
+	: UNDERLINE underline_content UNDERLINE { $$->lexeme = produce_output("<span style='text-decoration: underline;'>", $2->lexeme, "</span>"); }
 	;
 
 underline_parts 
@@ -104,11 +120,11 @@ underline_parts
 
 underline_content 
 	: underline_parts
-	| underline_content underline_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
+	| underline_content underline_parts { $$->lexeme = produce_output($$->lexeme, $2->lexeme, NULL); }
 	;
 
 monospace 
-	: MONOSPACE monospace_content MONOSPACE {char buf[1024]; snprintf(buf, sizeof buf, "<span style='font-family: monospace;'>%s</span>", $2->lexeme); $$->lexeme = strdup(buf);}  		
+	: MONOSPACE monospace_content MONOSPACE { $$->lexeme = produce_output("<span style='font-family: monospace;'>", $2->lexeme, "</span>"); }
 	;
 
 monospace_parts 
@@ -120,7 +136,7 @@ monospace_parts
 
 monospace_content 
 	: monospace_parts
-	| monospace_content monospace_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->lexeme, $2->lexeme); $$->lexeme = strdup(buf);}
+	| monospace_content monospace_parts { $$->lexeme = produce_output($$->lexeme, $2->lexeme, NULL); }
 	;
 
 %%
