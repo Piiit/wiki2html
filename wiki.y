@@ -7,14 +7,15 @@
 #include "symbol_table.h"
 
 /* It practically combines strings, creating a fresh char memory blob */
+// TODO this is fukin' pure hackin', do a variable parameter number version ;)
 char* produce_output(char* start, char* content, char* end)
 {
     int extra = 0;
     int start_pointer = 0;
     char* result;
     if (start) extra+=strlen(start);
-    if (end) extra+=strlen(end);
     if (content) extra+=strlen(content);
+    if (end) extra+=strlen(end);
     result = malloc(extra);
     if (start) strcat(result, start);
     if (content) strcat(result, content);
@@ -27,12 +28,11 @@ char* produce_output(char* start, char* content, char* end)
     struct wiki_node* node;
 }
 
-%token <node> TEXT
+%token TEXT
 %token BOLD
 %token ITALIC
 %token MONOSPACE
 %token UNDERLINE
-
 
 %type <node> block
 %type <node> block_text
@@ -56,7 +56,7 @@ char* produce_output(char* start, char* content, char* end)
 
 wikitext
 	: /* empty */
-	| wikitext block {printf("%s", $2->lexeme);}
+	| wikitext block {printf("%s", $2->value);}
 	;
 
 block
@@ -76,7 +76,7 @@ text
 	;
 
 bold
-	: BOLD bold_content BOLD { $$->lexeme = produce_output("<b>", $2->lexeme, "</b>"); }
+	: BOLD bold_content BOLD { $$->value = produce_output("<b>", $2->value, "</b>"); }
 	;
 
 bold_parts
@@ -88,11 +88,11 @@ bold_parts
 
 bold_content
 	: bold_parts
-	| bold_content bold_parts { $$->lexeme = produce_output($$->lexeme, $2->lexeme, NULL); }
+	| bold_content bold_parts { $$->value = produce_output($$->value, $2->value, NULL); }
 	;
 
 italic
-	: ITALIC italic_content ITALIC { $$->lexeme = produce_output("<i>", $2->lexeme, "</i>"); }  		
+	: ITALIC italic_content ITALIC { $$->value = produce_output("<i>", $2->value, "</i>"); }  		
 	;
 
 italic_parts
@@ -104,11 +104,11 @@ italic_parts
 
 italic_content 
 	: italic_parts
-	| italic_content italic_parts { $$->lexeme = produce_output($$->lexeme, $2->lexeme, NULL); }
+	| italic_content italic_parts { $$->value = produce_output($$->value, $2->value, NULL); }
 	;
 
 underline 
-	: UNDERLINE underline_content UNDERLINE { $$->lexeme = produce_output("<span style='text-decoration: underline;'>", $2->lexeme, "</span>"); }
+	: UNDERLINE underline_content UNDERLINE { $$->value = produce_output("<span style='text-decoration: underline;'>", $2->value, "</span>"); }
 	;
 
 underline_parts 
@@ -120,11 +120,11 @@ underline_parts
 
 underline_content 
 	: underline_parts
-	| underline_content underline_parts { $$->lexeme = produce_output($$->lexeme, $2->lexeme, NULL); }
+	| underline_content underline_parts { $$->value = produce_output($$->value, $2->value, NULL); }
 	;
 
 monospace 
-	: MONOSPACE monospace_content MONOSPACE { $$->lexeme = produce_output("<span style='font-family: monospace;'>", $2->lexeme, "</span>"); }
+	: MONOSPACE monospace_content MONOSPACE { $$->value = produce_output("<span style='font-family: monospace;'>", $2->value, "</span>"); }
 	;
 
 monospace_parts 
@@ -136,7 +136,7 @@ monospace_parts
 
 monospace_content 
 	: monospace_parts
-	| monospace_content monospace_parts { $$->lexeme = produce_output($$->lexeme, $2->lexeme, NULL); }
+	| monospace_content monospace_parts { $$->value = produce_output($$->value, $2->value, NULL); }
 	;
 
 %%
