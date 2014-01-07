@@ -8,32 +8,33 @@
 %}
 
 %union {
-  char* lexeme;		
-  char* value;			
+//  char* lexeme;		
+//  char* value;			
+    struct wiki_node* node;
 }
 
-%token <value> TEXT
+%token <node> TEXT
 %token BOLD
 %token ITALIC
 %token MONOSPACE
 %token UNDERLINE
 
 
-%type <value> paragraph
-%type <value> text_paragraph
-%type <value> text
-%type <value> bold
-%type <value> bold_content
-%type <value> bold_parts
-%type <value> italic
-%type <value> italic_content
-%type <value> italic_parts
-%type <value> monospace
-%type <value> monospace_content
-%type <value> monospace_parts
-%type <value> underline
-%type <value> underline_content
-%type <value> underline_parts
+%type <node> paragraph
+%type <node> text_paragraph
+%type <node> text
+%type <node> bold
+%type <node> bold_content
+%type <node> bold_parts
+%type <node> italic
+%type <node> italic_content
+%type <node> italic_parts
+%type <node> monospace
+%type <node> monospace_content
+%type <node> monospace_parts
+%type <node> underline
+%type <node> underline_content
+%type <node> underline_parts
 
 %start wikitext
 
@@ -41,87 +42,87 @@
 
 wikitext 
 	: /* empty */
-	| wikitext paragraph {printf("TEXT = %s\n", $2);}
+	| wikitext paragraph {printf("TEXT = %s\n", $2->value);}
 	;
 
 paragraph 
-	: text_paragraph {$$ = strdup($1);}
+	: text_paragraph {$$->value = strdup($1->value);}
 	;
 
 text_paragraph 
-	: bold {$$ = strdup($1);}
-	| italic {$$ = strdup($1);}
-	| monospace {$$ = strdup($1);}
-	| underline {$$ = strdup($1);}
-	| text {$$ = strdup($1);}
+	: bold {$$->value = strdup($1->value);}
+	| italic {$$->value = strdup($1->value);}
+	| monospace {$$->value = strdup($1->value);}
+	| underline {$$->value = strdup($1->value);}
+	| text {$$->value = strdup($1->value);}
 	;
 
 text 
-	: TEXT {$$ = strdup($1);}
+	: TEXT {$$->value = strdup($1->value);}
 	; 
 
 bold 
-	: BOLD bold_content BOLD {char buf[1024]; snprintf(buf, sizeof buf, "<b>%s</b>", $2); $$ = strdup(buf);}
+	: BOLD bold_content BOLD {char buf[1024]; snprintf(buf, sizeof buf, "<b>%s</b>", $2->value); $$->value = strdup(buf);}
 	;
 
 bold_parts 
-	: text {$$ = strdup($1);}
-	| italic {$$ = strdup($1);}
-	| underline {$$ = strdup($1);}
-	| monospace {$$ = strdup($1);}
+	: text {$$->value = strdup($1->value);}
+	| italic {$$->value = strdup($1->value);}
+	| underline {$$->value = strdup($1->value);}
+	| monospace {$$->value = strdup($1->value);}
 	;
 
 bold_content 
-	: bold_parts {$$ = strdup($1);}
-	| bold_content bold_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$, $2); $$ = strdup(buf);}
+	: bold_parts {$$->value = strdup($1->value);}
+	| bold_content bold_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->value, $2->value); $$->value = strdup(buf);}
 	;
 
 italic 
-	: ITALIC italic_content ITALIC {char buf[1024]; snprintf(buf, sizeof buf, "<i>%s</i>", $2); $$ = strdup(buf);}  		
+	: ITALIC italic_content ITALIC {char buf[1024]; snprintf(buf, sizeof buf, "<i>%s</i>", $2->value); $$->value = strdup(buf);}  		
 	;
 
 italic_parts 
-	: text {$$ = strdup($1);}
-	| bold {$$ = strdup($1);}
-	| underline {$$ = strdup($1);}
-	| monospace {$$ = strdup($1);}
+	: text {$$->value = strdup($1->value);}
+	| bold {$$->value = strdup($1->value);}
+	| underline {$$->value = strdup($1->value);}
+	| monospace {$$->value = strdup($1->value);}
 	;
 
 italic_content 
-	: italic_parts {$$ = strdup($1);}
-	| italic_content italic_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$, $2); $$ = strdup(buf);}
+	: italic_parts {$$->value = strdup($1->value);}
+	| italic_content italic_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->value, $2->value); $$->value = strdup(buf);}
 	;
 
 underline 
-	: UNDERLINE underline_content UNDERLINE {char buf[1024]; snprintf(buf, sizeof buf, "<span style='text-decoration: underline;'>%s</span>", $2); $$ = strdup(buf);}  		
+	: UNDERLINE underline_content UNDERLINE {char buf[1024]; snprintf(buf, sizeof buf, "<span style='text-decoration: underline;'>%s</span>", $2->value); $$->value = strdup(buf);}  		
 	;
 
 underline_parts 
-	: text {$$ = strdup($1);}
-	| bold {$$ = strdup($1);}
-	| italic {$$ = strdup($1);}
-	| monospace {$$ = strdup($1);}
+	: text {$$->value = strdup($1->value);}
+	| bold {$$->value = strdup($1->value);}
+	| italic {$$->value = strdup($1->value);}
+	| monospace {$$->value = strdup($1->value);}
 	;
 
 underline_content 
-	: underline_parts {$$ = strdup($1);}
-	| underline_content underline_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$, $2); $$ = strdup(buf);}
+	: underline_parts {$$->value = strdup($1->value);}
+	| underline_content underline_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->value, $2->value); $$->value = strdup(buf);}
 	;
 
 monospace 
-	: MONOSPACE monospace_content MONOSPACE {char buf[1024]; snprintf(buf, sizeof buf, "<span style='font-family: monospace;'>%s</span>", $2); $$ = strdup(buf);}  		
+	: MONOSPACE monospace_content MONOSPACE {char buf[1024]; snprintf(buf, sizeof buf, "<span style='font-family: monospace;'>%s</span>", $2->value); $$->value = strdup(buf);}  		
 	;
 
 monospace_parts 
-	: text {$$ = strdup($1);}
-	| bold {$$ = strdup($1);}
-	| italic {$$ = strdup($1);}
-	| underline {$$ = strdup($1);}
+	: text {$$->value = strdup($1->value);}
+	| bold {$$->value = strdup($1->value);}
+	| italic {$$->value = strdup($1->value);}
+	| underline {$$->value = strdup($1->value);}
 	;
 
 monospace_content 
-	: monospace_parts {$$ = strdup($1);}
-	| monospace_content monospace_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$, $2); $$ = strdup(buf);}
+	: monospace_parts {$$->value = strdup($1->value);}
+	| monospace_content monospace_parts {char buf[1024]; snprintf(buf, sizeof buf, "%s%s", $$->value, $2->value); $$->value = strdup(buf);}
 	;
 
 %%

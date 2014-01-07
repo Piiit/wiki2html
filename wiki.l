@@ -4,7 +4,7 @@
 #include <string.h>
 #include "symbol_table.h"
 
-struct wiki_node* current_lexeme = NULL;
+//struct wiki_node* current_lexeme = NULL;
 
 struct wiki_node* create_node(char* name, char* value)
 {
@@ -24,11 +24,11 @@ MULTILINE_COMMENT            "/*"([^/]|"/"[^*])*"*/"
 
 %%
 
-[a-zA-Z0-9 \t\n]+   yylval.value = strdup(yytext); return TEXT;
-"\*\*"              current_lexeme = create_node("BOLD", strdup(yytext)); return BOLD;
-"\/\/"              current_lexeme = create_node("ITALIC", strdup(yytext)); return ITALIC;
-"__"				current_lexeme = create_node("UNDERLINE", strdup(yytext)); return UNDERLINE;
-"\'\'"				current_lexeme = create_node("MONOSPACE", strdup(yytext)); return MONOSPACE;
+[a-zA-Z0-9 \t\n]+   yylval.node = create_node("TEXT", strdup(yytext)); return TEXT;
+"\*\*"              yylval.node = create_node("BOLD", strdup(yytext)); return BOLD;
+"\/\/"              yylval.node = create_node("ITALIC", strdup(yytext)); return ITALIC;
+"__"				yylval.node = create_node("UNDERLINE", strdup(yytext)); return UNDERLINE;
+"\'\'"				yylval.node = create_node("MONOSPACE", strdup(yytext)); return MONOSPACE;
 
 {MULTILINE_COMMENT}            { /* do nothing */ }
 
