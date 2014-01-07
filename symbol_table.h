@@ -20,6 +20,7 @@ struct wiki_scope {
 
 /* node of a symbol table (keyword, variable...) */
 struct wiki_node {
+    /* the original input string debugging purpose */
     char*               lexeme;
     char*               value;
     int                 type;
