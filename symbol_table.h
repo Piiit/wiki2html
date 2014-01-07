@@ -22,6 +22,10 @@ struct wiki_scope {
 struct wiki_node {
     /* the original input string debugging purpose */
     char*               lexeme;
+    /* the resulting string after being parsed, might be equal to the lexeme
+      NOTE: even if the string is equal to the lexeme, it is still *different*
+      speaking of memory allocation...
+      */
     char*               value;
     int                 type;
     struct wiki_scope*  scope;

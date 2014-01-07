@@ -10,6 +10,7 @@ struct wiki_node* create_node(char* lexeme)
 {
     struct wiki_node* node = get_new_node();
     node->lexeme = lexeme;
+    node->value = strdup(lexeme);
     return node;
 }
 

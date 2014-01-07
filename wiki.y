@@ -40,7 +40,7 @@
 
 wikitext
 	: /* empty */
-	| wikitext block {printf("TEXT = %s\n", $2->lexeme);}
+	| wikitext block {printf("%s", $2->lexeme);}
 	;
 
 block
