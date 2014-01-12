@@ -9,7 +9,6 @@
 struct wiki_node* table;
 
 /* It practically combines strings, creating a fresh char memory blob */
-// TODO this is fukin' pure hackin', do a variable parameter number version ;)
 char* produce_output(char* start, char* content, char* end)
 {
     int extra = 0;

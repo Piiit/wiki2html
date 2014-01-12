@@ -1,0 +1,183 @@
+State 6 conflicts: 2 shift/reduce
+State 11 conflicts: 4 reduce/reduce
+State 12 conflicts: 4 reduce/reduce
+
+
+Grammar
+
+    0 $accept: entry $end
+
+    1 entry: /* empty */
+    2      | entry formatting
+
+    3 formatting: BOLD formatting BOLD
+    4           | ITALIC formatting ITALIC
+    5           | BOLD formatting
+    6           | ITALIC formatting
+    7           | formatting ITALIC
+    8           | formatting BOLD
+    9           | TEXT
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+TEXT (258) 9
+BOLD (259) 3 5 8
+ITALIC (260) 4 6 7
+
+
+Nonterminals, with rules where they appear
+
+$accept (6)
+    on left: 0
+entry (7)
+    on left: 1 2, on right: 0 2
+formatting (8)
+    on left: 3 4 5 6 7 8 9, on right: 2 3 4 5 6 7 8
+
+
+State 0
+
+    0 $accept: . entry $end
+
+    $default  reduce using rule 1 (entry)
+
+    entry  go to state 1
+
+
+State 1
+
+    0 $accept: entry . $end
+    2 entry: entry . formatting
+
+    $end    shift, and go to state 2
+    TEXT    shift, and go to state 3
+    BOLD    shift, and go to state 4
+    ITALIC  shift, and go to state 5
+
+    formatting  go to state 6
+
+
+State 2
+
+    0 $accept: entry $end .
+
+    $default  accept
+
+
+State 3
+
+    9 formatting: TEXT .
+
+    $default  reduce using rule 9 (formatting)
+
+
+State 4
+
+    3 formatting: BOLD . formatting BOLD
+    5           | BOLD . formatting
+
+    TEXT    shift, and go to state 3
+    BOLD    shift, and go to state 4
+    ITALIC  shift, and go to state 5
+
+    formatting  go to state 7
+
+
+State 5
+
+    4 formatting: ITALIC . formatting ITALIC
+    6           | ITALIC . formatting
+
+    TEXT    shift, and go to state 3
+    BOLD    shift, and go to state 4
+    ITALIC  shift, and go to state 5
+
+    formatting  go to state 8
+
+
+State 6
+
+    2 entry: entry formatting .
+    7 formatting: formatting . ITALIC
+    8           | formatting . BOLD
+
+    BOLD    shift, and go to state 9
+    ITALIC  shift, and go to state 10
+
+    BOLD      [reduce using rule 2 (entry)]
+    ITALIC    [reduce using rule 2 (entry)]
+    $default  reduce using rule 2 (entry)
+
+
+State 7
+
+    3 formatting: BOLD formatting . BOLD
+    5           | BOLD formatting .
+    7           | formatting . ITALIC
+    8           | formatting . BOLD
+
+    BOLD    shift, and go to state 11
+    ITALIC  shift, and go to state 10
+
+    $default  reduce using rule 5 (formatting)
+
+
+State 8
+
+    4 formatting: ITALIC formatting . ITALIC
+    6           | ITALIC formatting .
+    7           | formatting . ITALIC
+    8           | formatting . BOLD
+
+    ITALIC  shift, and go to state 12
+
+    $default  reduce using rule 6 (formatting)
+
+
+State 9
+
+    8 formatting: formatting BOLD .
+
+    $default  reduce using rule 8 (formatting)
+
+
+State 10
+
+    7 formatting: formatting ITALIC .
+
+    $default  reduce using rule 7 (formatting)
+
+
+State 11
+
+    3 formatting: BOLD formatting BOLD .
+    8           | formatting BOLD .
+
+    $end      reduce using rule 3 (formatting)
+    $end      [reduce using rule 8 (formatting)]
+    TEXT      reduce using rule 3 (formatting)
+    TEXT      [reduce using rule 8 (formatting)]
+    BOLD      reduce using rule 3 (formatting)
+    BOLD      [reduce using rule 8 (formatting)]
+    ITALIC    reduce using rule 3 (formatting)
+    ITALIC    [reduce using rule 8 (formatting)]
+    $default  reduce using rule 3 (formatting)
+
+
+State 12
+
+    4 formatting: ITALIC formatting ITALIC .
+    7           | formatting ITALIC .
+
+    $end      reduce using rule 4 (formatting)
+    $end      [reduce using rule 7 (formatting)]
+    TEXT      reduce using rule 4 (formatting)
+    TEXT      [reduce using rule 7 (formatting)]
+    BOLD      reduce using rule 4 (formatting)
+    BOLD      [reduce using rule 7 (formatting)]
+    ITALIC    reduce using rule 4 (formatting)
+    ITALIC    [reduce using rule 7 (formatting)]
+    $default  reduce using rule 4 (formatting)

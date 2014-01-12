@@ -15,7 +15,8 @@
 
 struct wiki_scope {
     /* Linked list... */
-    struct wiki_scope    *parent;
+    char*                   name;
+    struct wiki_scope*      parent;
 };
 
 /* node of a symbol table (keyword, variable...) */
