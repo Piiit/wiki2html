@@ -79,18 +79,18 @@ void print_symbol_table(struct wiki_node* root)
             current = current->next;
             char* scope = NULL;
             if (current->scope != NULL) current->scope->name;
-            printf("%s -> %s (scope: %s)\n", current->lexeme, current->value, scope);
+            fprintf(stderr, "%s -> %s (scope: %s)\n", current->lexeme, current->value, scope);
         }
         while (current->next != NULL);
     else
-        printf("%s -> %s\n", current->lexeme, current->value);
+        fprintf(stderr, "%s -> %s\n", current->lexeme, current->value);
 }
 
 /** SCOPE STUFF HERE **/
 
 struct wiki_scope* scope_init(void)
 {
-    printf("Creating new scope\n");
+    fprintf(stderr, "Creating new scope\n");
     if (global_scope == NULL)
     {
         global_scope = get_new_scope_node("main");

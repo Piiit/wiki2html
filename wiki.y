@@ -171,11 +171,11 @@ int main(void)
     /* Symbol table initialization and test */
     main_scope = scope_init();
     table = symbol_table_init();
-    printf("Initial symbol table size: %d\n", symbol_table_length(table));
+    fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
     if (table == NULL)
-        printf("Unable to allocate memory for symbol table!\n");
+        fprintf(stderr, "Unable to allocate memory for symbol table!\n");
     int err = yyparse();
-    printf("Final symbol table lenght: %d\n", symbol_table_length(table));
+    fprintf(stderr, "Final symbol table lenght: %d\n", symbol_table_length(table));
     print_symbol_table(table);
     symbol_table_free();
     return err;

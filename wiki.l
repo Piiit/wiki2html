@@ -43,7 +43,7 @@ MULTILINE_COMMENT            "/*"([^/]|"/"[^*])*"*/"
 
 <HEADER>"="+{WS}*{NEWLINE} {
 	BEGIN 0;
-//	printf("HEADER_EXIT: %s\n", yytext);
+	fprintf(stderr, "HEADER_EXIT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext));
 	return HEADER_EXIT;
 }
