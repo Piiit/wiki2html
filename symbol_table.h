@@ -38,17 +38,35 @@ struct wiki_node {
  * If the table is already initialized, then just return the pointer to the first entry
  */
 struct wiki_node* symbol_table_init(void);
+
 /* Allocate a new node, with default (clean) fields */
 struct wiki_node* get_new_node(void);
+
 /* Initialize the global scope and return it
  * If the scope is already initialized, then just return the global scope
  */
-struct wiki_node* get_new_node(void);
-int scope_init(struct wiki_scope* node);
-void add_keyword(char* keyword);
+struct wiki_scope* scope_init(void);
+struct wiki_scope* get_new_scope_node(char* name);
+
+/**
+ * Clean the global scope
+ */
 void scope_free(void);
+
+/**
+ * Set a particular scope to a node
+ */
+void set_scope(struct wiki_node* node, struct wiki_scope* scope);
+
+/**
+ * Add symbol to the symbol table
+ */
+void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scope* scope);
+
+void add_keyword(char* keyword);
+
 void symbol_table_free(void);
-void add_symbol(struct wiki_node* root, struct wiki_node* node);
+
 void print_symbol_table(struct wiki_node* root);
 
 #endif /* SYMBOL_TABLE_H */

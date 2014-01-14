@@ -7,6 +7,7 @@
 #include "symbol_table.h"
 
 struct wiki_node* table;
+struct wiki_scope* main_scope;
 
 /* It practically combines strings, creating a fresh char memory blob */
 char* produce_output(char* start, char* content, char* end)
@@ -52,16 +53,16 @@ char* produce_output(char* start, char* content, char* end)
 %type <node> underline_parts
 
 %start wikitext
-
+/* TODO substitute $$->value with a result variable */
 %%
 
 wikitext
 	: /* empty */
-	| wikitext block { printf("%s", $2->value);}
+	| wikitext block { printf("%s", $2->value); }
 	;
 
 block
-	: block_text { add_symbol(table, $1); }
+	: block_text
 	;
 
 block_text
@@ -81,7 +82,7 @@ bold
 	;
 
 bold_parts
-	: text
+	: text { add_symbol(table, $1, main_scope); }
 	| italic
 	| underline
 	| monospace
@@ -97,7 +98,7 @@ italic
 	;
 
 italic_parts
-	: text
+	: text { add_symbol(table, $1, main_scope); }
 	| bold
 	| underline
 	| monospace
@@ -113,7 +114,7 @@ underline
 	;
 
 underline_parts 
-	: text
+	: text { add_symbol(table, $1, main_scope); }
 	| bold
 	| italic
 	| monospace
@@ -129,7 +130,7 @@ monospace
 	;
 
 monospace_parts 
-	: text
+	: text { add_symbol(table, $1, main_scope); }
 	| bold
 	| italic
 	| underline
@@ -149,10 +150,13 @@ monospace_content
 int main(void)
 {
     /* Symbol table initialization and test */
+    main_scope = scope_init();
     table = symbol_table_init();
+    printf("Initial symbol table size: %d\n", symbol_table_length(table));
     if (table == NULL)
         printf("Unable to allocate memory for symbol table!\n");
     int err = yyparse();
+    printf("Final symbol table lenght: %d\n", symbol_table_length(table));
     print_symbol_table(table);
     symbol_table_free();
     return err;
