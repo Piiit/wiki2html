@@ -81,7 +81,7 @@ block_text
 	;
 
 text
-	: TEXT
+	: TEXT { $$="" }
 	;
 
 bold
