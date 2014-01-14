@@ -81,7 +81,7 @@ struct wiki_scope* scope_go_up(void)
 %type <result> header_parts
 
 %start wikitext
-/* TODO substitute $$ with a result variable */
+
 %%
 
 wikitext
@@ -107,7 +107,7 @@ block_text
 text
 	: TEXT {
         add_symbol(table, $1, current_scope);
-        $$ = $1->lexeme;
+        $$ = strdup($1->lexeme);
 	}
 	;
 
