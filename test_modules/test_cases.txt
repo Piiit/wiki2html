@@ -4,7 +4,5 @@ Before everything...
 //italic**bold**//
 **bold//italic//bold**
 ...this is the end!
-
 = this is a header =
-
 lala.
