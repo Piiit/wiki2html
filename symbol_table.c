@@ -124,7 +124,7 @@ void scope_free(void)
 void set_scope(struct wiki_node* node, struct wiki_scope* scope)
 {
     if (node != NULL) {
-        printf("Setting scope %s to node %s\n", scope->name, node->lexeme);
+        fprintf(stderr, "Setting scope %s to node %s\n", scope->name, node->lexeme);
         node->scope = scope;
     }
 }

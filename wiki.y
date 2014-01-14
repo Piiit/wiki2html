@@ -33,7 +33,7 @@ struct wiki_scope* set_new_scope(char* basename)
     struct wiki_scope* parent = current_scope;
     sprintf(name, "%s_%d", basename, scope_depth(current_scope));
     current_scope = get_new_scope_node(name, parent);
-    printf("New scope %s created\n", name);
+    fprintf(stderr, "New scope %s created\n", name);
 }
 
 /**
