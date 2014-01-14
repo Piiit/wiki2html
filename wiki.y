@@ -26,6 +26,24 @@ char* produce_output(char* start, char* content, char* end)
     if (end) strcat(result, end);
     return result;
 }
+
+struct wiki_scope* set_new_scope(char* basename)
+{
+    char* name = malloc(32);
+    struct wiki_scope* parent = current_scope;
+    sprintf(name, "%s_%d", basename, scope_depth(current_scope));
+    current_scope = get_new_scope_node(name, parent);
+    printf("New scope %s created\n", name);
+}
+
+/**
+* Go up a level from the current scope
+*/
+struct wiki_scope* scope_go_up(void)
+{
+    current_scope = current_scope->parent;
+}
+
 %}
 
 %union {
@@ -33,41 +51,44 @@ char* produce_output(char* start, char* content, char* end)
     struct wiki_node* node;
 }
 
-%token TEXT
-%token BOLD
-%token ITALIC
-%token MONOSPACE
-%token UNDERLINE
+/* All tokens are described by wiki_node struct */
+%token <node> TEXT
+%token <node> BOLD
+%token <node> ITALIC
+%token <node> MONOSPACE
+%token <node> UNDERLINE
 %token <node> HEADER_ENTRY
-%token HEADER_EXIT
+%token <node> HEADER_EXIT
 
 
-%type <node> block
-%type <node> block_text
-%type <node> text
-%type <node> bold
-%type <node> bold_content
-%type <node> bold_parts
-%type <node> italic
-%type <node> italic_content
-%type <node> italic_parts
-%type <node> monospace
-%type <node> monospace_content
-%type <node> monospace_parts
-%type <node> underline
-%type <node> underline_content
-%type <node> underline_parts
-%type <node> header
-%type <node> header_content
-%type <node> header_parts
+%type <result> block
+%type <result> block_text
+%type <result> text
+%type <result> bold
+%type <result> bold_content
+%type <result> bold_parts
+%type <result> italic
+%type <result> italic_content
+%type <result> italic_parts
+%type <result> monospace
+%type <result> monospace_content
+%type <result> monospace_parts
+%type <result> underline
+%type <result> underline_content
+%type <result> underline_parts
+%type <result> header
+%type <result> header_content
+%type <result> header_parts
 
 %start wikitext
-/* TODO substitute $$->value with a result variable */
+/* TODO substitute $$ with a result variable */
 %%
 
 wikitext
 	: /* empty */
-	| wikitext block { printf("%s", $2->value); }
+	| wikitext block {
+            printf("%s", $2);
+        }
 	;
 
 block
@@ -84,107 +105,124 @@ block_text
 	;
 
 text
-	: TEXT { if ($$ == NULL) $$=get_new_node(); }
+	: TEXT {
+        add_symbol(table, $1, current_scope);
+        $$ = $1->lexeme;
+	}
 	;
 
 bold
 	: BOLD bold_content BOLD {
-// TODO go up one level of scope
-                            $$->value = produce_output("<b>", $2->value, "</b>");
-                            
-                    }
+            scope_go_up();
+            $$ = produce_output("<b>", $2, "</b>");
+        }
 	;
 
 bold_parts
-	: text {
-                char name[32];
-                sprintf(name, "bold_%d", scope_depth(main_scope));
-                struct wiki_scope* parent = current_scope;
-                current_scope = get_new_scope_node(name);
-                current_scope->parent = parent;
-                add_symbol(table, $1, current_scope);
-            }
+	: text
 	| italic
 	| underline
 	| monospace
 	;
 
 bold_content
-	: bold_parts
+	: bold_parts {
+            set_new_scope("bold");
+        }
 	| bold_content bold_parts {
-        $$->value = produce_output($$->value, $2->value, NULL);
-	}
+            $$ = produce_output($$, $2, NULL);
+        }
 	;
 
 italic
 	: ITALIC italic_content ITALIC {
-        $$->value = produce_output("<i>", $2->value, "</i>");
-    }
+            scope_go_up();
+            $$ = produce_output("<i>", $2, "</i>");
+        }
 	;
 
 italic_parts
-	: text { add_symbol(table, $1, current_scope); }
+	: text
 	| bold
 	| underline
 	| monospace
 	;
 
 italic_content 
-	: italic_parts
-	| italic_content italic_parts { $$->value = produce_output($$->value, $2->value, NULL); }
+	: italic_parts { set_new_scope("italic"); }
+	| italic_content italic_parts { $$ = produce_output($$, $2, NULL); }
 	;
 
 underline 
-	: UNDERLINE underline_content UNDERLINE { $$->value = produce_output("<span style='text-decoration: underline;'>", $2->value, "</span>"); }
+	: UNDERLINE underline_content UNDERLINE {
+        $$ = produce_output("<span style='text-decoration: underline;'>", $2, "</span>");
+        }
 	;
 
 underline_parts 
-	: text { add_symbol(table, $1, current_scope); }
+	: text
 	| bold
 	| italic
 	| monospace
 	;
 
 underline_content 
-	: underline_parts
-	| underline_content underline_parts { $$->value = produce_output($$->value, $2->value, NULL); }
+	: underline_parts {
+//            set_new_scope("underline");
+        }
+	| underline_content underline_parts {
+        $$ = produce_output($$, $2, NULL);
+        }
 	;
 
 monospace 
-	: MONOSPACE monospace_content MONOSPACE { $$->value = produce_output("<span style='font-family: monospace;'>", $2->value, "</span>"); }
+	: MONOSPACE monospace_content MONOSPACE {
+        $$ = produce_output("<span style='font-family: monospace;'>", $2, "</span>"); }
 	;
 
 monospace_parts 
-	: text { add_symbol(table, $1, current_scope); }
+	: text {
+        //add_symbol(table, $1, current_scope);
+	}
 	| bold
 	| italic
 	| underline
 	;
 
 monospace_content 
-	: monospace_parts
-	| monospace_content monospace_parts { $$->value = produce_output($$->value, $2->value, NULL); }
+	: monospace_parts {
+//            set_new_scope("monospace");
+        }
+	| monospace_content monospace_parts {
+        $$ = produce_output($$, $2, NULL);
+        }
 	;
 
 header
 	: HEADER_ENTRY header_content HEADER_EXIT {
-			int level = strlen($1->lexeme); 
+			int level = strlen($1->lexeme);
 			char buf1[10];
 			char buf2[10];
 			sprintf(buf1, "<h%d>", level);
 			sprintf(buf2, "</h%d>", level);
-			$$->value = produce_output(buf1, $2->value, buf2);
+			$$ = produce_output(buf1, $2, buf2);
 		}
 	;
 
 header_content 
-	: header_parts 
-	| header_content header_parts {$$->value = produce_output($$->value, $2->value, NULL);} 
+	: header_parts {
+//            set_new_scope("header");
+        }
+	| header_content header_parts {
+        $$ = produce_output($$, $2, NULL);
+    }
 	;
 
 header_parts
-	: text { add_symbol(table, $1, current_scope); }
-	; 
+	: text {
+//        add_symbol(table, $1, current_scope);
+    }
+	;
 %%
 
 #include "lex.yy.c"

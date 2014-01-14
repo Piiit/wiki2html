@@ -96,18 +96,18 @@ struct wiki_scope* scope_init(void)
     fprintf(stderr, "Creating new scope\n");
     if (global_scope == NULL)
     {
-        global_scope = get_new_scope_node("main");
+        global_scope = get_new_scope_node("main", NULL);
     }
     return global_scope;
 }
 
-struct wiki_scope* get_new_scope_node(char* name)
+struct wiki_scope* get_new_scope_node(char* name, struct wiki_scope* parent)
 {
     struct wiki_scope* node = malloc(sizeof(struct wiki_scope));
-    if (node)
+    if (node != NULL)
     {
         node->name = name;
-        node->parent = NULL;
+        node->parent = parent;
     }
     return node;
 }

@@ -49,7 +49,7 @@ struct wiki_node* get_new_node(void);
  * If the scope is already initialized, then just return the global scope
  */
 struct wiki_scope* scope_init(void);
-struct wiki_scope* get_new_scope_node(char* name);
+struct wiki_scope* get_new_scope_node(char* name, struct wiki_scope* parent);
 
 /**
  * Clean the global scope
