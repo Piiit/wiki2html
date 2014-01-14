@@ -1,4 +1,10 @@
+Before everything...
 **test** 123 
 **bold2** //italic//
 //italic**bold**//
 **bold//italic//bold**
+...this is the end!
+
+= this is a header =
+
+lala.

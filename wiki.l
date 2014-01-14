@@ -19,11 +19,14 @@ struct wiki_node* create_node(char* lexeme)
 /* Comments */
 /* TODO think a single line comment, if needed ;) */
 /*SINGLELINE_COMMENT           \-\-.* */
+WS	[\t ]
+NEWLINE [\n\r]
 MULTILINE_COMMENT            "/*"([^/]|"/"[^*])*"*/"
+
+%x HEADER
 
 %%
 
-[a-zA-Z0-9 \t\n]+   yylval.node = create_node(strdup(yytext)); return TEXT;
 "\*\*"              yylval.node = create_node(strdup(yytext)); return BOLD;
 "\/\/"              yylval.node = create_node(strdup(yytext)); return ITALIC;
 "__"				yylval.node = create_node(strdup(yytext)); return UNDERLINE;
@@ -31,4 +34,24 @@ MULTILINE_COMMENT            "/*"([^/]|"/"[^*])*"*/"
 
 {MULTILINE_COMMENT}            { /* do nothing */ }
 
+^("=")+ {
+	BEGIN HEADER;
+	fprintf(stderr, "HEADER_ENTRY: %s\n", yytext);
+	yylval.node = create_node(strdup(yytext));
+	return HEADER_ENTRY;
+}
+
+<HEADER>"="+{WS}*{NEWLINE} {
+	BEGIN 0;
+//	printf("HEADER_EXIT: %s\n", yytext);
+	yylval.node = create_node(strdup(yytext));
+	return HEADER_EXIT;
+}
+
+
+
+<*>. {
+	yylval.node = create_node(strdup(yytext));
+	return TEXT;
+}
 %%

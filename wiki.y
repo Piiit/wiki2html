@@ -35,6 +35,9 @@ char* produce_output(char* start, char* content, char* end)
 %token ITALIC
 %token MONOSPACE
 %token UNDERLINE
+%token <node> HEADER_ENTRY
+%token HEADER_EXIT
+
 
 %type <node> block
 %type <node> block_text
@@ -51,6 +54,9 @@ char* produce_output(char* start, char* content, char* end)
 %type <node> underline
 %type <node> underline_content
 %type <node> underline_parts
+%type <node> header
+%type <node> header_content
+%type <node> header_parts
 
 %start wikitext
 /* TODO substitute $$->value with a result variable */
@@ -63,6 +69,7 @@ wikitext
 
 block
 	: block_text
+	| header
 	;
 
 block_text
@@ -141,6 +148,18 @@ monospace_content
 	| monospace_content monospace_parts { $$->value = produce_output($$->value, $2->value, NULL); }
 	;
 
+header
+	: HEADER_ENTRY header_content HEADER_EXIT {$$->value = produce_output("<h>", $2->value, "</h>");}
+	;
+
+header_content 
+	: header_parts 
+	| header_content header_parts {$$->value = produce_output($$->value, $2->value, NULL);} 
+	;
+
+header_parts
+	: text { add_symbol(table, $1, main_scope); }
+	; 
 %%
 
 #include "lex.yy.c"
