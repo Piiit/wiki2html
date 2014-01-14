@@ -1,9 +1,12 @@
 Before everything...
 **test** 123 
 **bold2** //italic//
-== header 2 ===
+== head = er 2 ===
 //italic**bold**//
 **bold//italic//bold**
 ...this is the end!%
 = this is a header (level 1) =
 lala.
+
+a ==
+END

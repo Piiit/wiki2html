@@ -41,7 +41,7 @@ MULTILINE_COMMENT            "/*"([^/]|"/"[^*])*"*/"
 	return HEADER_ENTRY;
 }
 
-<HEADER>"="+{WS}*{NEWLINE}$ {
+<HEADER>"="+{WS}*{NEWLINE} {
 	// Return to default scope
 	BEGIN 0; 
 	
