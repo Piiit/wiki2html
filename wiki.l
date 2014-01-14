@@ -41,8 +41,13 @@ MULTILINE_COMMENT            "/*"([^/]|"/"[^*])*"*/"
 	return HEADER_ENTRY;
 }
 
-<HEADER>"="+{WS}*{NEWLINE} {
-	BEGIN 0;
+<HEADER>"="+{WS}*{NEWLINE}$ {
+	// Return to default scope
+	BEGIN 0; 
+	
+	// Restore the last {NEWLINE} character
+	yyless(strlen(yytext) - 1);
+
 	fprintf(stderr, "HEADER_EXIT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext));
 	return HEADER_EXIT;
