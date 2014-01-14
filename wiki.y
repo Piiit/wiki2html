@@ -149,7 +149,14 @@ monospace_content
 	;
 
 header
-	: HEADER_ENTRY header_content HEADER_EXIT {$$->value = produce_output("<h>", $2->value, "</h>");}
+	: HEADER_ENTRY header_content HEADER_EXIT {
+			int level = strlen($1->lexeme); 
+			char buf1[10];
+			char buf2[10];
+			sprintf(buf1, "<h%d>", level);
+			sprintf(buf2, "</h%d>", level);
+			$$->value = produce_output(buf1, $2->value, buf2);
+		}
 	;
 
 header_content 
@@ -173,7 +180,7 @@ int main(void)
     table = symbol_table_init();
     fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
     if (table == NULL)
-        fprintf(stderr, "Unable to allocate memory for symbol table!\n");
+        fprintf(stderr, "Unable to allocate memory for symbol table\n");
     int err = yyparse();
     fprintf(stderr, "Final symbol table lenght: %d\n", symbol_table_length(table));
     print_symbol_table(table);
