@@ -81,7 +81,7 @@ block_text
 	;
 
 text
-	: TEXT { $$="" }
+	: TEXT { if ($$ == NULL) $$=get_new_node(); }
 	;
 
 bold
