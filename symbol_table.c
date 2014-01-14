@@ -1,5 +1,5 @@
 /* 
- * Copirait Lorenzo aka "The pointer" and Peter aka "The algorithm"
+ * Copirait Lorenzo aka "The pointer" or "Ghost <!> buster" and Peter aka "The algorithm"
  * (C) (null)
  */
 

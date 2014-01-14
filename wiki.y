@@ -18,7 +18,7 @@ char* produce_output(char* start, char* content, char* end)
     if (start) extra+=strlen(start);
     if (content) extra+=strlen(content);
     if (end) extra+=strlen(end);
-    result = malloc(extra);
+    result = malloc(extra+3);
     if (start) strcat(result, start);
     if (content) strcat(result, content);
     if (end) strcat(result, end);
