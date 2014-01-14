@@ -6,11 +6,12 @@
 
 //struct wiki_node* current_lexeme = NULL;
 
-struct wiki_node* create_node(char* lexeme)
+struct wiki_node* create_node(char* lexeme, long line_number)
 {
     struct wiki_node* node = get_new_node();
     node->lexeme = lexeme;
     node->value = strdup(lexeme);
+    node->line_number = line_number;
     return node;
 }
 
@@ -27,17 +28,17 @@ MULTILINE_COMMENT            "/*"([^/]|"/"[^*])*"*/"
 
 %%
 
-"\*\*"              yylval.node = create_node(strdup(yytext)); return BOLD;
-"\/\/"              yylval.node = create_node(strdup(yytext)); return ITALIC;
-"__"				yylval.node = create_node(strdup(yytext)); return UNDERLINE;
-"\'\'"				yylval.node = create_node(strdup(yytext)); return MONOSPACE;
+"\*\*"              yylval.node = create_node(strdup(yytext), yylineno); return BOLD;
+"\/\/"              yylval.node = create_node(strdup(yytext), yylineno); return ITALIC;
+"__"				yylval.node = create_node(strdup(yytext), yylineno); return UNDERLINE;
+"\'\'"				yylval.node = create_node(strdup(yytext), yylineno); return MONOSPACE;
 
 {MULTILINE_COMMENT}            { /* do nothing */ }
 
 ^("=")+ {
 	BEGIN HEADER;
 	fprintf(stderr, "HEADER_ENTRY: %s\n", yytext);
-	yylval.node = create_node(strdup(yytext));
+	yylval.node = create_node(strdup(yytext), yylineno);
 	return HEADER_ENTRY;
 }
 
@@ -49,14 +50,14 @@ MULTILINE_COMMENT            "/*"([^/]|"/"[^*])*"*/"
 	yyless(strlen(yytext) - 1);
 
 	fprintf(stderr, "HEADER_EXIT: %s\n", yytext);
-	yylval.node = create_node(strdup(yytext));
+	yylval.node = create_node(strdup(yytext), yylineno);
 	return HEADER_EXIT;
 }
 
 
 
 <*>. {
-	yylval.node = create_node(strdup(yytext));
+	yylval.node = create_node(strdup(yytext), yylineno);
 	return TEXT;
 }
 %%

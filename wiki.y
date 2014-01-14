@@ -6,8 +6,9 @@
 
 #include "symbol_table.h"
 
-struct wiki_node* table;
-struct wiki_scope* main_scope;
+static struct wiki_node* table;
+static struct wiki_scope* main_scope;
+static long line_number = 0;
 
 /* It practically combines strings, creating a fresh char memory blob */
 char* produce_output(char* start, char* content, char* end)
@@ -171,7 +172,12 @@ header_parts
 
 #include "lex.yy.c"
 
-
+/* Called by yyparse on error.  */
+int yyerror (char const *s)
+{
+    fprintf(stderr, "Line: %ld: ", line_number);
+    fprintf(stderr, "%s\n", s);
+}
 
 int main(void)
 {

@@ -29,6 +29,9 @@ struct wiki_node {
       */
     char*               value;
     int                 type;
+    /* Some additional information for the error routine */
+    long line_number;
+    long column_number;
     struct wiki_scope*  scope;
     /* Linked list... */
     struct wiki_node*   next;
