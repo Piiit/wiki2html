@@ -8,6 +8,7 @@
 
 static struct wiki_node* table;
 static struct wiki_scope* main_scope;
+static struct wiki_scope* current_scope;
 static long line_number = 0;
 
 /* It practically combines strings, creating a fresh char memory blob */
@@ -28,6 +29,7 @@ char* produce_output(char* start, char* content, char* end)
 %}
 
 %union {
+    char* result;
     struct wiki_node* node;
 }
 
@@ -86,11 +88,22 @@ text
 	;
 
 bold
-	: BOLD bold_content BOLD { $$->value = produce_output("<b>", $2->value, "</b>"); }
+	: BOLD bold_content BOLD {
+// TODO go up one level of scope
+                            $$->value = produce_output("<b>", $2->value, "</b>");
+                            
+                    }
 	;
 
 bold_parts
-	: text { add_symbol(table, $1, main_scope); }
+	: text {
+                char name[32];
+                sprintf(name, "bold_%d", scope_depth(main_scope));
+                struct wiki_scope* parent = current_scope;
+                current_scope = get_new_scope_node(name);
+                current_scope->parent = parent;
+                add_symbol(table, $1, current_scope);
+            }
 	| italic
 	| underline
 	| monospace
@@ -98,15 +111,19 @@ bold_parts
 
 bold_content
 	: bold_parts
-	| bold_content bold_parts { $$->value = produce_output($$->value, $2->value, NULL); }
+	| bold_content bold_parts {
+        $$->value = produce_output($$->value, $2->value, NULL);
+	}
 	;
 
 italic
-	: ITALIC italic_content ITALIC { $$->value = produce_output("<i>", $2->value, "</i>"); }
+	: ITALIC italic_content ITALIC {
+        $$->value = produce_output("<i>", $2->value, "</i>");
+    }
 	;
 
 italic_parts
-	: text { add_symbol(table, $1, main_scope); }
+	: text { add_symbol(table, $1, current_scope); }
 	| bold
 	| underline
 	| monospace
@@ -122,7 +139,7 @@ underline
 	;
 
 underline_parts 
-	: text { add_symbol(table, $1, main_scope); }
+	: text { add_symbol(table, $1, current_scope); }
 	| bold
 	| italic
 	| monospace
@@ -138,7 +155,7 @@ monospace
 	;
 
 monospace_parts 
-	: text { add_symbol(table, $1, main_scope); }
+	: text { add_symbol(table, $1, current_scope); }
 	| bold
 	| italic
 	| underline
@@ -166,7 +183,7 @@ header_content
 	;
 
 header_parts
-	: text { add_symbol(table, $1, main_scope); }
+	: text { add_symbol(table, $1, current_scope); }
 	; 
 %%
 
@@ -175,6 +192,7 @@ header_parts
 /* Called by yyparse on error.  */
 int yyerror (char const *s)
 {
+// TODO make line number to work!
     fprintf(stderr, "Line: %ld: ", line_number);
     fprintf(stderr, "%s\n", s);
 }
@@ -183,6 +201,7 @@ int main(void)
 {
     /* Symbol table initialization and test */
     main_scope = scope_init();
+    current_scope = main_scope;
     table = symbol_table_init();
     fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
     if (table == NULL)

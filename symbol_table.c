@@ -11,6 +11,8 @@
 static struct wiki_node* symbol_table = NULL;
 static struct wiki_scope* global_scope = NULL;
 
+static struct wiki_scope* current_scope = NULL;
+
 /** SYMBOL TABLE STUFF HERE **/
 
 struct wiki_node* symbol_table_init(void)
@@ -68,7 +70,7 @@ int symbol_table_length(struct wiki_node* root)
        cur_ptr=cur_ptr->next;
        count++;
     }
-    return(count);  
+    return count;
 }
 
 void print_symbol_table(struct wiki_node* root)
@@ -78,7 +80,8 @@ void print_symbol_table(struct wiki_node* root)
         do {
             current = current->next;
             char* scope = NULL;
-            if (current->scope != NULL) current->scope->name;
+            if (current->scope != NULL)
+                current->scope->name;
             fprintf(stderr, "%s -> %s (scope: %s)\n", current->lexeme, current->value, scope);
         }
         while (current->next != NULL);
@@ -120,6 +123,21 @@ void scope_free(void)
 
 void set_scope(struct wiki_node* node, struct wiki_scope* scope)
 {
-    if (node != NULL)
+    if (node != NULL) {
+        printf("Setting scope %s to node %s\n", scope->name, node->lexeme);
         node->scope = scope;
+    }
+}
+
+int scope_depth(struct wiki_scope* deepest)
+{
+    struct wiki_scope* cur_ptr = deepest;  
+    int count=0;
+
+    while(cur_ptr != NULL)
+    {
+       cur_ptr=cur_ptr->parent;
+       count++;
+    }
+    return count;  
 }

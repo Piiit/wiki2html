@@ -62,6 +62,12 @@ void scope_free(void);
 void set_scope(struct wiki_node* node, struct wiki_scope* scope);
 
 /**
+ * Compute the depth of the given scope
+ * (1 is a single level (e.g. global scope), 2 is a second level and so on...
+ */
+int scope_depth(struct wiki_scope* deepest);
+
+/**
  * Add symbol to the symbol table
  */
 void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scope* scope);
