@@ -18,6 +18,10 @@ $(NAME):
 debug:
 	$(CC) -o $@ $^ -DYYDEBUG y.tab.c -ly -ll
 
+test:
+	make $(NAME)
+	./wiki < test_modules/test_cases.txt 2>/dev/null | diff test_modules/test_cases_expected.txt - || exit 0
+
 .PHONY: clean
 
 clean:
