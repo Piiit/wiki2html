@@ -256,7 +256,8 @@ header_parts
 int yyerror (char const *s)
 {
 // TODO make line number to work!
-    fprintf(stderr, "Line: %ld: ", line_number);
+//    fprintf(stderr, "Line: %ld: ", line_number);
+    fprintf(stderr, "error, %s: '%s' in line %d\n", s, yytext, yylineno);
     fprintf(stderr, "%s\n", s);
 }
 
