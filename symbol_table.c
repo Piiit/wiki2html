@@ -79,10 +79,9 @@ void print_symbol_table(struct wiki_node* root)
     if (current->next != NULL)
         do {
             current = current->next;
-            char* scope = NULL;
-            if (current->scope != NULL)
-                current->scope->name;
-            fprintf(stderr, "%s -> %s (scope: %s)\n", current->lexeme, current->value, scope);
+            fprintf(stderr, "%s -> %s (scope: %s; stack: ", current->lexeme, current->value, current->scope->name);
+            print_scope_stack(current->scope);
+            fprintf(stderr, ")\n");
         }
         while (current->next != NULL);
     else
@@ -139,5 +138,20 @@ int scope_depth(struct wiki_scope* deepest)
        cur_ptr=cur_ptr->parent;
        count++;
     }
-    return count;  
+    return count;
+}
+
+void print_scope_stack(struct wiki_scope* scope)
+{
+    struct wiki_scope* cur_ptr = scope;
+    int count=0;
+
+    while(cur_ptr != NULL)
+    {
+       fprintf(stderr, "->%s", cur_ptr->name);
+       cur_ptr=cur_ptr->parent;
+       count++;
+    }
+
+    fprintf(stderr, " (depth %d)", count);
 }

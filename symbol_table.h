@@ -68,6 +68,11 @@ void set_scope(struct wiki_node* node, struct wiki_scope* scope);
 int scope_depth(struct wiki_scope* deepest);
 
 /**
+ * Visualize the scope stack in a nice way
+ */
+void print_scope_stack(struct wiki_scope* scope);
+
+/**
  * Add symbol to the symbol table
  */
 void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scope* scope);

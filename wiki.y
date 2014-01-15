@@ -41,6 +41,11 @@ struct wiki_scope* set_new_scope(char* basename)
 */
 struct wiki_scope* scope_go_up(void)
 {
+    if (current_scope->parent == NULL) {
+        fprintf(stderr, "WARNING: stopping attempt to go up root scope (resulting in a fire)!\n");
+        return;
+    }
+    fprintf(stderr, "Exiting from scope %s, back to %s\n", current_scope->name, current_scope->parent->name);
     current_scope = current_scope->parent;
 }
 
@@ -112,9 +117,15 @@ text
 	;
 
 bold
-	: BOLD bold_content BOLD {
+	: BOLD {
+            set_new_scope("bold");
+        }
+    bold_content
+    BOLD {
+            //char tmp[120];
+            //sprintf(tmp, "<b id=\"%s\">", current_scope->name);
+            $$ = produce_output("<b>", $3, "</b>");
             scope_go_up();
-            $$ = produce_output("<b>", $2, "</b>");
         }
 	;
 
@@ -126,18 +137,22 @@ bold_parts
 	;
 
 bold_content
-	: bold_parts {
-            set_new_scope("bold");
-        }
+	: bold_parts
 	| bold_content bold_parts {
             $$ = produce_output($$, $2, NULL);
         }
 	;
 
 italic
-	: ITALIC italic_content ITALIC {
+    : ITALIC {
+            set_new_scope("italic");
+        }
+    italic_content
+    ITALIC {
+            //char tmp[120];
+            //sprintf(tmp, "<b id=\"%s\">", current_scope->name);
+            $$ = produce_output("<i>", $3, "</i>");
             scope_go_up();
-            $$ = produce_output("<i>", $2, "</i>");
         }
 	;
 
@@ -148,14 +163,21 @@ italic_parts
 	| monospace
 	;
 
-italic_content 
-	: italic_parts { set_new_scope("italic"); }
+italic_content
+	: italic_parts
 	| italic_content italic_parts { $$ = produce_output($$, $2, NULL); }
 	;
 
-underline 
-	: UNDERLINE underline_content UNDERLINE {
-        $$ = produce_output("<span style='text-decoration: underline;'>", $2, "</span>");
+underline
+    : UNDERLINE {
+            set_new_scope("underline");
+        }
+    underline_content
+    UNDERLINE {
+            //char tmp[120];
+            //sprintf(tmp, "<b id=\"%s\">", current_scope->name);
+            $$ = produce_output("<span style='text-decoration: underline;'>", $3, "</span>");
+            scope_go_up();
         }
 	;
 
@@ -167,61 +189,64 @@ underline_parts
 	;
 
 underline_content 
-	: underline_parts {
-//            set_new_scope("underline");
-        }
+	: underline_parts
 	| underline_content underline_parts {
         $$ = produce_output($$, $2, NULL);
         }
 	;
 
-monospace 
-	: MONOSPACE monospace_content MONOSPACE {
-        $$ = produce_output("<span style='font-family: monospace;'>", $2, "</span>"); }
+monospace
+    : MONOSPACE {
+            set_new_scope("monospace");
+        }
+    monospace_content
+    MONOSPACE {
+            //char tmp[120];
+            //sprintf(tmp, "<b id=\"%s\">", current_scope->name);
+            $$ = produce_output("<span style='font-family: monospace;'>", $3, "</span>");
+            scope_go_up();
+        }
 	;
 
 monospace_parts 
-	: text {
-        //add_symbol(table, $1, current_scope);
-	}
+	: text
 	| bold
 	| italic
 	| underline
 	;
 
 monospace_content 
-	: monospace_parts {
-//            set_new_scope("monospace");
-        }
+	: monospace_parts
 	| monospace_content monospace_parts {
         $$ = produce_output($$, $2, NULL);
         }
 	;
 
 header
-	: HEADER_ENTRY header_content HEADER_EXIT {
-			int level = strlen($1->lexeme);
-			char buf1[10];
-			char buf2[10];
-			sprintf(buf1, "<h%d>", level);
-			sprintf(buf2, "</h%d>", level);
-			$$ = produce_output(buf1, $2, buf2);
-		}
+    : HEADER_ENTRY {
+            set_new_scope("header");
+        }
+    header_content
+    HEADER_EXIT {
+            int level = strlen($1->lexeme);
+            char buf1[10];
+            char buf2[10];
+            sprintf(buf1, "<h%d>", level);
+            sprintf(buf2, "</h%d>", level);
+            $$ = produce_output(buf1, $3, buf2);
+            scope_go_up();
+        }
 	;
 
 header_content 
-	: header_parts {
-//            set_new_scope("header");
-        }
+	: header_parts
 	| header_content header_parts {
         $$ = produce_output($$, $2, NULL);
     }
 	;
 
 header_parts
-	: text {
-//        add_symbol(table, $1, current_scope);
-    }
+	: text
 	;
 %%
 
