@@ -13,6 +13,15 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
+/* Let's enumerate some types for a node */
+enum
+{
+    TYPE_UNKNOWN = 0,
+    TYPE_VARIABLE,
+
+    TYPE_MAX // just a placeholder, indicating the maximum type number
+};
+
 struct wiki_scope {
     /* Linked list... */
     char*                   name;
@@ -78,6 +87,12 @@ void print_scope_stack(struct wiki_scope* scope);
 void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scope* scope);
 
 void add_keyword(char* keyword);
+
+/**
+ * Search for the given identifier
+ * Returns NULL if the id was not found in the scope stack
+ */
+struct wiki_node* find_identifier(char* identifier, struct wiki_node* scope);
 
 void symbol_table_free(void);
 

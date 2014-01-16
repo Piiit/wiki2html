@@ -60,6 +60,22 @@ void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scop
     set_scope(node, scope);
 }
 
+struct wiki_node* find_identifier(char* identifier, struct wiki_node* scope)
+{
+    struct wiki_node* current = scope;
+    if (current->next != NULL)
+        do {
+            if (strcmp(current->lexeme, identifier) && current->type == TYPE_VARIABLE)
+            {
+                return current;
+            }
+            current = current->next;
+        }
+        while (current->next != NULL);
+    /* We did not find anything */
+    return NULL;
+}
+
 int symbol_table_length(struct wiki_node* root)
 {
     struct wiki_node* cur_ptr = root;  
