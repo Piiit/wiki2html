@@ -16,3 +16,6 @@ END
 <li> <b>bold list item 2</b> something <i>italic</i></li>
 <li> list item</li>
 </ul>
+
+x=. 
+EOF

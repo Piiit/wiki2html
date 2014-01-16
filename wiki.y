@@ -65,6 +65,11 @@ struct wiki_scope* scope_go_up(void)
 %token <node> HEADER_EXIT
 %token <node> LIST_ITEM_ENTRY
 %token <node> LIST_ITEM_EXIT
+%token <node> DYNAMIC_ENTRY
+%token <node> DYNAMIC_EXIT
+%token <node> DYNAMIC_STRING
+%token <node> DYNAMIC_ID
+%token <node> DYNAMIC_ASSIG
 
 %type <result> block
 %type <result> block_text
@@ -88,6 +93,9 @@ struct wiki_scope* scope_go_up(void)
 %type <result> list_item_content
 %type <result> list_item_parts
 %type <result> list
+%type <result> dynamic
+%type <result> dynamic_assignment
+%type <result> dynamic_print
 
 %start wikitext
 
@@ -102,10 +110,10 @@ wikitext
 
 block
 	: block_text
+	| dynamic
 	| header
 	| list {
 			$$ = produce_output("<ul>\n", $1, "</ul>\n");
-			scope_go_up();
 		}
 	;
 
@@ -260,9 +268,7 @@ header_parts
 	;
 
 list
-	: list_item {
-			set_new_scope("list");
-		}
+	: list_item 
 	| list list_item {
 			$$ = produce_output($$, $2, NULL);
 		} 
@@ -290,6 +296,26 @@ list_item_parts
 	: block_text
 	;
 
+dynamic
+	: DYNAMIC_ENTRY dynamic_print DYNAMIC_EXIT {
+			$$ = strdup($2);
+		}
+	| DYNAMIC_ENTRY dynamic_assignment DYNAMIC_EXIT {
+			$$ = strdup($2);
+		}
+	;
+
+dynamic_assignment
+	: DYNAMIC_ID DYNAMIC_ASSIG DYNAMIC_STRING {
+			$$ = produce_output("DYNAMIC_ASSIGNMENT: ", $2->lexeme, $3->lexeme);			
+		}
+	;
+
+dynamic_print
+	: DYNAMIC_ID {
+			$$ = produce_output("DYNAMIC_OUTPUT: ", $1->lexeme, NULL);	
+		}
+	;
 
 %%
 

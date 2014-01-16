@@ -20,6 +20,7 @@ struct wiki_node* create_node(char* lexeme, long line_number)
 /* Scopes (aka named lexer states) */
 %x HEADER
 %x LIST_ITEM
+%x DYNAMIC
 
 /* Comments */
 /* TODO think a single line comment, if needed ;) */
@@ -35,6 +36,11 @@ HEADER_ENTRY		^("=")+
 HEADER_EXIT			"="+{WS}*{NEWLINE}
 LIST_ITEM_ENTRY		^([ ]*\*)
 LIST_ITEM_EXIT		{NEWLINE}
+DYNAMIC_ENTRY		"{{"
+DYNAMIC_EXIT		"}}"
+DYNAMIC_STRING      "\""([^\]|"/"[^\"])*"\""
+DYNAMIC_ID			[a-zA-Z][a-zA-Z0-9]*
+DYNAMIC_ASSIG		{WS}*":="{WS}*
 
 %%
 
@@ -56,6 +62,28 @@ LIST_ITEM_EXIT		{NEWLINE}
 <*>{MONOSPACE} {
 	yylval.node = create_node(strdup(yytext), yylineno); 
 	return MONOSPACE;
+}
+
+<*>{DYNAMIC_ENTRY} {
+	BEGIN DYNAMIC;
+	fprintf(stderr, "DYNAMIC_ENTRY: %s\n", yytext);
+	yylval.node = create_node(strdup(yytext), yylineno);
+	return DYNAMIC_ENTRY;
+}
+
+<DYNAMIC>{DYNAMIC_EXIT} {
+	// Return to default scope
+	BEGIN 0; 
+	
+	fprintf(stderr, "DYNAMIC_EXIT: %s\n", yytext);
+	yylval.node = create_node(strdup(yytext), yylineno);
+	return DYNAMIC_EXIT;
+}
+
+<DYNAMIC>{DYNAMIC_ID} {
+	fprintf(stderr, "DYNAMIC_ID: %s\n", yytext);
+	yylval.node = create_node(strdup(yytext), yylineno);
+	return DYNAMIC_ID;
 }
 
 {MULTILINE_COMMENT} { 
