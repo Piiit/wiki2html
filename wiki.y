@@ -105,6 +105,7 @@ block
 	| header
 	| list {
 			$$ = produce_output("<ul>\n", $1, "</ul>\n");
+			scope_go_up();
 		}
 	;
 

@@ -9,7 +9,7 @@ NAME=wiki
 
 $(NAME):
 	$(LEXER) -l $(NAME).l
-	$(YACC) -vd $(NAME).y
+	$(YACC) -vd --verbose $(NAME).y
 #	-v: generates the DFA
 #	-d: generate the y.tab.h file
 	$(CC) -o $@ $^ y.tab.c symbol_table.c -ly -ll
