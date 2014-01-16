@@ -92,7 +92,7 @@ void add_keyword(char* keyword);
  * Search for the given identifier
  * Returns NULL if the id was not found in the scope stack
  */
-struct wiki_node* find_identifier(char* identifier, struct wiki_node* scope);
+struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table);
 
 void symbol_table_free(void);
 

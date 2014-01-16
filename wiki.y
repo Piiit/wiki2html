@@ -307,13 +307,25 @@ dynamic
 
 dynamic_assignment
 	: DYNAMIC_ID DYNAMIC_ASSIG DYNAMIC_STRING {
-			$$ = produce_output("DYNAMIC_ASSIGNMENT: ", $1->lexeme, $3->lexeme);			
+            add_symbol(table, $1, current_scope);
+            $1->type = TYPE_VARIABLE;
+            $1->value = $3->lexeme;
+            $$ = ""; // nothing is outputted when assigning
+//			$$ = produce_output("DYNAMIC_ASSIGNMENT: ", $1->lexeme, $3->lexeme);			
 		}
 	;
 
 dynamic_print
 	: DYNAMIC_ID {
-			$$ = produce_output("DYNAMIC_OUTPUT: ", $1->lexeme, NULL);	
+            struct wiki_node* variable = find_identifier($1->lexeme, current_scope, table);
+            $$ = produce_output("DYNAMIC_OUTPUT: ", $1->lexeme, NULL);  
+            if (variable == NULL)
+            {
+                printf("ERROR GRANDE: undefined!\n");
+            }
+            else {
+                $$ = strdup(variable->value);
+            }
 		}
 	;
 
