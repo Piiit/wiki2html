@@ -66,7 +66,7 @@ DYNAMIC_ASSIG		{WS}*":="{WS}*
 
 <*>{DYNAMIC_ENTRY} {
 	BEGIN DYNAMIC;
-	fprintf(stderr, "DYNAMIC_ENTRY: %s\n", yytext);
+//	fprintf(stderr, "DYNAMIC_ENTRY: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return DYNAMIC_ENTRY;
 }
@@ -75,24 +75,24 @@ DYNAMIC_ASSIG		{WS}*":="{WS}*
 	// Return to default scope
 	BEGIN 0; 
 	
-	fprintf(stderr, "DYNAMIC_EXIT: %s\n", yytext);
+//	fprintf(stderr, "DYNAMIC_EXIT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return DYNAMIC_EXIT;
 }
 
 <DYNAMIC>{DYNAMIC_ID} {
-	fprintf(stderr, "DYNAMIC_ID: %s\n", yytext);
+//	fprintf(stderr, "DYNAMIC_ID: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return DYNAMIC_ID;
 }
 
 <DYNAMIC>{DYNAMIC_ASSIG} {
-	fprintf(stderr, "DYNAMIC_ASSIG: %s\n", yytext);
+//	fprintf(stderr, "DYNAMIC_ASSIG: %s\n", yytext);
 	return DYNAMIC_ASSIG;
 }
 
 <DYNAMIC>{DYNAMIC_STRING} {
-	fprintf(stderr, "DYNAMIC_STRING: %s\n", yytext);
+//	fprintf(stderr, "DYNAMIC_STRING: %s\n", yytext);
 	char *to = strndup(yytext + 1, yyleng - 2);
 	yylval.node = create_node(strdup(to), yylineno);
 	return DYNAMIC_STRING;

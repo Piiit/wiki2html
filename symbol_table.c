@@ -60,13 +60,8 @@ void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scop
     set_scope(node, scope);
 }
 
-struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table)
+struct wiki_node* scan_symbol_table(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table)
 {
-    struct wiki_scope* current_scope = scope;
-    if (current_scope->parent != NULL)
-    {
-        do {
-
             struct wiki_node* current = symbol_table;
             if (current->next != NULL)
             {
@@ -82,10 +77,28 @@ struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope, st
                 }
                 while (current->next != NULL);
             }
+            return NULL;
+}
+
+struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table)
+{
+    struct wiki_scope* current_scope = scope;
+    if (current_scope->parent != NULL)
+    {
+        do {
+
+            struct wiki_node* abcd = scan_symbol_table(identifier, current_scope, symbol_table);
+            if (abcd != NULL)
+                return abcd;
 
             current_scope = current_scope->parent;
         }
         while (current_scope->parent != NULL);
+    }
+    else
+    {
+        /* Special case for main */
+        return scan_symbol_table(identifier, current_scope, symbol_table);
     }
     /* We did not find anything */
     return NULL;

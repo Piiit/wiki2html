@@ -308,8 +308,10 @@ dynamic
 dynamic_assignment
 	: DYNAMIC_ID DYNAMIC_ASSIG DYNAMIC_STRING {
             add_symbol(table, $1, current_scope);
+            /* Set it to variable type */
             $1->type = TYPE_VARIABLE;
-            $1->value = $3->lexeme;
+            /* The value is the actual content */
+            $1->value = strdup($3->lexeme);
             $$ = ""; // nothing is outputted when assigning
 //			$$ = produce_output("DYNAMIC_ASSIGNMENT: ", $1->lexeme, $3->lexeme);			
 		}
@@ -317,11 +319,14 @@ dynamic_assignment
 
 dynamic_print
 	: DYNAMIC_ID {
+//            $$ = produce_output("DYNAMIC_OUTPUT: ", $1->lexeme, NULL);
             struct wiki_node* variable = find_identifier($1->lexeme, current_scope, table);
-            $$ = produce_output("DYNAMIC_OUTPUT: ", $1->lexeme, NULL);  
             if (variable == NULL)
             {
-                printf("ERROR GRANDE: undefined!\n");
+                char tmp[512];
+                sprintf(tmp, "%s not found!", $1->lexeme);
+                yyerror(tmp);
+                exit(1);
             }
             else {
                 $$ = strdup(variable->value);
@@ -339,7 +344,6 @@ int yyerror (char const *s)
 // TODO make line number to work!
 //    fprintf(stderr, "Line: %ld: ", line_number);
     fprintf(stderr, "error, %s: '%s' in line %d\n", s, yytext, yylineno);
-    fprintf(stderr, "%s\n", s);
 }
 
 int main(void)
