@@ -7,9 +7,8 @@
 #include "symbol_table.h"
 
 static struct wiki_node* table;
-static struct wiki_scope* main_scope;
+static struct wiki_scope* global_scope;
 static struct wiki_scope* current_scope;
-static long line_number = 0;
 
 /* It practically combines strings, creating a fresh char memory blob */
 char* produce_output(char* start, char* content, char* end)
@@ -305,8 +304,8 @@ int yyerror (char const *s)
 int main(void)
 {
     /* Symbol table initialization and test */
-    main_scope = scope_init();
-    current_scope = main_scope;
+    global_scope = scope_init();
+    current_scope = global_scope;
     table = symbol_table_init();
     fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
     if (table == NULL)
