@@ -307,7 +307,7 @@ dynamic
 
 dynamic_assignment
 	: DYNAMIC_ID DYNAMIC_ASSIG DYNAMIC_STRING {
-			$$ = produce_output("DYNAMIC_ASSIGNMENT: ", $2->lexeme, $3->lexeme);			
+			$$ = produce_output("DYNAMIC_ASSIGNMENT: ", $1->lexeme, $3->lexeme);			
 		}
 	;
 

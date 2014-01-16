@@ -86,6 +86,18 @@ DYNAMIC_ASSIG		{WS}*":="{WS}*
 	return DYNAMIC_ID;
 }
 
+<DYNAMIC>{DYNAMIC_ASSIG} {
+	fprintf(stderr, "DYNAMIC_ASSIG: %s\n", yytext);
+	return DYNAMIC_ASSIG;
+}
+
+<DYNAMIC>{DYNAMIC_STRING} {
+	fprintf(stderr, "DYNAMIC_STRING: %s\n", yytext);
+	char *to = strndup(yytext + 1, yyleng - 2);
+	yylval.node = create_node(strdup(to), yylineno);
+	return DYNAMIC_STRING;
+}
+
 {MULTILINE_COMMENT} { 
 	/* do nothing */ 
 }
