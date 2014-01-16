@@ -91,9 +91,6 @@ LIST_ITEM_EXIT		{NEWLINE}
 <LIST_ITEM>{LIST_ITEM_EXIT} {
 	// Return to default scope
 	BEGIN 0; 
-	
-	// Restore the last {NEWLINE} character
-	yyless(strlen(yytext) - 1);
 
 	fprintf(stderr, "LIST_ITEM_EXIT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
