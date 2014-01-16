@@ -103,7 +103,9 @@ wikitext
 block
 	: block_text
 	| header
-	| list
+	| list {
+			$$ = produce_output("<ul>\n", $1, "</ul>\n");
+		}
 	;
 
 block_text
