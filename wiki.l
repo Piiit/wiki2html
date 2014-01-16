@@ -19,6 +19,7 @@ struct wiki_node* create_node(char* lexeme, long line_number)
 
 /* Scopes (aka named lexer states) */
 %x HEADER
+%x LIST_ITEM
 
 /* Comments */
 /* TODO think a single line comment, if needed ;) */
@@ -32,25 +33,27 @@ UNDERLINE			"__"
 MONOSPACE			"\'\'"
 HEADER_ENTRY		^("=")+
 HEADER_EXIT			"="+{WS}*{NEWLINE}
+LIST_ITEM_ENTRY		^([ ]*\*)
+LIST_ITEM_EXIT		{NEWLINE}
 
 %%
 
-{BOLD} {
+<*>{BOLD} {
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return BOLD;
 }
 
-{ITALIC} {
+<*>{ITALIC} {
 	yylval.node = create_node(strdup(yytext), yylineno); 
 	return ITALIC;
 }
 
-{UNDERLINE} {
+<*>{UNDERLINE} {
 	yylval.node = create_node(strdup(yytext), yylineno); 
 	return UNDERLINE;
 }
 
-{MONOSPACE} {
+<*>{MONOSPACE} {
 	yylval.node = create_node(strdup(yytext), yylineno); 
 	return MONOSPACE;
 }
@@ -76,6 +79,25 @@ HEADER_EXIT			"="+{WS}*{NEWLINE}
 	fprintf(stderr, "HEADER_EXIT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return HEADER_EXIT;
+}
+
+{LIST_ITEM_ENTRY} { 
+	BEGIN LIST_ITEM;
+	fprintf(stderr, "LIST_ITEM_ENTRY: %s\n", yytext);
+	yylval.node = create_node(strdup(yytext), yylineno);
+	return LIST_ITEM_ENTRY;
+}
+
+<LIST_ITEM>{LIST_ITEM_EXIT} {
+	// Return to default scope
+	BEGIN 0; 
+	
+	// Restore the last {NEWLINE} character
+	yyless(strlen(yytext) - 1);
+
+	fprintf(stderr, "LIST_ITEM_EXIT: %s\n", yytext);
+	yylval.node = create_node(strdup(yytext), yylineno);
+	return LIST_ITEM_EXIT;
 }
 
 <*>. {

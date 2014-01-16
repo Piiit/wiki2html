@@ -21,7 +21,7 @@ debug:
 test:
 	make clean
 	make $(NAME)
-	./wiki < test_modules/test_cases.txt 2>/dev/null | diff test_modules/test_cases_expected.txt - && echo "TEST: SUCCEEDED" || exit 0
+	./wiki < test_modules/test_cases.txt 2>/dev/null | diff -c test_modules/test_cases_expected.txt - && echo "TEST: SUCCEEDED" || exit 0
 
 .PHONY: clean
 

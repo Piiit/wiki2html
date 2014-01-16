@@ -10,3 +10,7 @@ lala.
 
 a ==
 END
+
+* list item 1
+* **bold list item 2** something //italic//
+* list item

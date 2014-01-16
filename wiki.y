@@ -64,7 +64,8 @@ struct wiki_scope* scope_go_up(void)
 %token <node> UNDERLINE
 %token <node> HEADER_ENTRY
 %token <node> HEADER_EXIT
-
+%token <node> LIST_ITEM_ENTRY
+%token <node> LIST_ITEM_EXIT
 
 %type <result> block
 %type <result> block_text
@@ -84,6 +85,10 @@ struct wiki_scope* scope_go_up(void)
 %type <result> header
 %type <result> header_content
 %type <result> header_parts
+%type <result> list_item 
+%type <result> list_item_content
+%type <result> list_item_parts
+%type <result> list
 
 %start wikitext
 
@@ -99,6 +104,7 @@ wikitext
 block
 	: block_text
 	| header
+	| list
 	;
 
 block_text
@@ -111,9 +117,9 @@ block_text
 
 text
 	: TEXT {
-        add_symbol(table, $1, current_scope);
-        $$ = strdup($1->lexeme);
-	}
+			add_symbol(table, $1, current_scope);
+			$$ = strdup($1->lexeme);
+		}
 	;
 
 bold
@@ -165,7 +171,9 @@ italic_parts
 
 italic_content
 	: italic_parts
-	| italic_content italic_parts { $$ = produce_output($$, $2, NULL); }
+	| italic_content italic_parts {
+			$$ = produce_output($$, $2, NULL); 
+		}
 	;
 
 underline
@@ -191,7 +199,7 @@ underline_parts
 underline_content 
 	: underline_parts
 	| underline_content underline_parts {
-        $$ = produce_output($$, $2, NULL);
+			$$ = produce_output($$, $2, NULL);
         }
 	;
 
@@ -218,7 +226,7 @@ monospace_parts
 monospace_content 
 	: monospace_parts
 	| monospace_content monospace_parts {
-        $$ = produce_output($$, $2, NULL);
+			$$ = produce_output($$, $2, NULL);
         }
 	;
 
@@ -241,13 +249,46 @@ header
 header_content 
 	: header_parts
 	| header_content header_parts {
-        $$ = produce_output($$, $2, NULL);
-    }
+			$$ = produce_output($$, $2, NULL);
+		}
 	;
 
 header_parts
 	: text
 	;
+
+list
+	: list_item {
+			set_new_scope("list");
+		}
+	| list list_item {
+			$$ = produce_output($$, $2, NULL);
+		} 
+	;
+
+list_item
+    : LIST_ITEM_ENTRY {
+            set_new_scope("list_item");
+        }
+    list_item_content
+    LIST_ITEM_EXIT {
+            $$ = produce_output("<li>", $3, "</li>\n");
+            scope_go_up();
+        }
+	;
+
+list_item_content 
+	: list_item_parts
+	| list_item_content list_item_parts {
+			$$ = produce_output($$, $2, NULL);
+		}
+	;
+
+list_item_parts
+	: block_text
+	;
+
+
 %%
 
 #include "lex.yy.c"
