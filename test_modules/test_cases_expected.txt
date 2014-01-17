@@ -2,7 +2,7 @@ Before everything...
 <b>test</b> 123 
 <b>bold2 has multiple 
 lines</b> <i>italic</i>
-<h2>head = er 2</h2>
+<h2>head = er 2 =</h2>
 <i>italic<b>bold</b></i>
 <b>bold<i>italic</i>bold</b>
 ...this is the end!%

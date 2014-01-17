@@ -12,7 +12,7 @@ $(NAME):
 	$(YACC) -vd --verbose $(NAME).y
 #	-v: generates the DFA
 #	-d: generate the y.tab.h file
-	$(CC) -o $@ $^ y.tab.c symbol_table.c -ly -ll
+	$(CC) -o $@ $^ y.tab.c symbol_table.c utils.c -ly -ll
 
 # *To see the moves of the parser:
 debug:

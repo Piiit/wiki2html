@@ -1,4 +1,6 @@
 
+#include <string.h>
+
 /*
  * Thx to http://stackoverflow.com/users/9530/adam-rosenfield
  */

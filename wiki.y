@@ -4,8 +4,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
-
 #include "symbol_table.h"
+#include "utils.h"
 
 static struct wiki_node* table;
 static struct wiki_scope* global_scope;
@@ -266,7 +266,18 @@ header
             char buf2[10];
             sprintf(buf1, "<h%d>", level);
             sprintf(buf2, "</h%d>", level);
-            $$ = produce_output(buf1, $3, buf2);
+			
+			// Too many equal signs? Produce output... 
+			char *equalsigns = trim(strdup($4->lexeme));
+			if(level < strlen(equalsigns)) {
+				char buf3[512];
+				char buf4[1024];
+				snprintf(buf3, strlen($4->lexeme) - level + 1, "%s", $4->lexeme);			
+				snprintf(buf4, sizeof buf4, "%s%s", buf3, buf2);
+            	$$ = produce_output(buf1, $3, buf4);
+			} else {
+				$$ = produce_output(buf1, $3, buf2);
+			}
             scope_go_up();
         }
 	;

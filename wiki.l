@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbol_table.h"
-#include "utils.c"
+#include "utils.h"
 
 //struct wiki_node* current_lexeme = NULL;
 
@@ -130,6 +130,7 @@ DYNAMIC_ASSIG		":="
 	yyless(strlen(yytext) - 1);
 
 	fprintf(stderr, "HEADER_EXIT: %s\n", yytext);
+	
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return HEADER_EXIT;
 }
