@@ -290,7 +290,8 @@ header_content
 	;
 
 header_parts
-	: text
+    : dynamic
+	| text
 	;
 
 list
