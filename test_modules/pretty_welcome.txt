@@ -1,0 +1,10 @@
+{{authorA:="Lorenzo"}}
+{{authorB:="Peter"}}
+= This is an example generated with wiki2html=
+Welcome from {{authorA}} & {{authorB}}!
+==What is that?==
+This is a **wiki** parser basically, where you can easily produce HTML-compliant files in a go.
+==Is that free?==
+Yes it is absolutely //free// and //open source//.
+==Who wrote it?==
+{{authorA}} & {{authorB}} for a Compilers course project.

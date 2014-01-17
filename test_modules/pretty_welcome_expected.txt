@@ -1,0 +1,7 @@
+<h1>This is an example generated with wiki2html</h1>
+Welcome from Lorenzo & Peter!
+<h2>What is that?</h2>
+This is a <b>wiki</b> parser basically, where you can easily produce HTML-compliant files in a go.
+<h2>Is that free?</h2>
+Yes it is absolutely <i>free</i> and <i>open source</i>.
+<h2>Who wrote it?</h2>
