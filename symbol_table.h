@@ -22,17 +22,11 @@ enum
     TYPE_MAX // just a placeholder, indicating the maximum type number
 };
 
-struct wiki_scope {
-    /* Linked list... */
-    char*                   name;
-    struct wiki_scope*      parent;
-};
-
 /* node of a symbol table (keyword, variable...) */
 struct wiki_node {
     /* the original input string debugging purpose */
     char*               lexeme;
-    /* the resulting string after being parsed, might be equal to the lexeme
+    /* the assigned value
       NOTE: even if the string is equal to the lexeme, it is still *different*
       speaking of memory allocation...
       */
@@ -44,6 +38,13 @@ struct wiki_node {
     struct wiki_scope*  scope;
     /* Linked list... */
     struct wiki_node*   next;
+};
+
+struct wiki_scope {
+    /* Linked list... */
+    char*                   name;
+    struct wiki_node*       local_symbol_table;
+    struct wiki_scope*      parent;
 };
 
 /* Initialize the symbol table and return it
@@ -84,7 +85,7 @@ void print_scope_stack(struct wiki_scope* scope);
 /**
  * Add symbol to the symbol table
  */
-void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scope* scope);
+void add_symbol(struct wiki_node* symbol, struct wiki_scope* scope);
 
 void add_keyword(char* keyword);
 
@@ -92,10 +93,10 @@ void add_keyword(char* keyword);
  * Search for the given identifier
  * Returns NULL if the id was not found in the scope stack
  */
-struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table);
+struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope);
 
 void symbol_table_free(void);
 
-void print_symbol_table(struct wiki_node* root);
+void print_symbol_table(struct wiki_scope* scope);
 
 #endif /* SYMBOL_TABLE_H */

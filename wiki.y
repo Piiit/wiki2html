@@ -11,6 +11,10 @@ static struct wiki_node* table;
 static struct wiki_scope* global_scope;
 static struct wiki_scope* current_scope;
 
+/* Keep track of all the used scopes for debug */
+static int scope_num = 0;
+static struct wiki_scope* scope_history[1024] = {NULL,};
+
 /* It practically combines strings, creating a fresh char memory blob */
 char* produce_output(char* start, char* content, char* end)
 {
@@ -34,6 +38,9 @@ struct wiki_scope* set_new_scope(char* basename)
     sprintf(name, "%s_%d", basename, scope_depth(current_scope));
     current_scope = get_new_scope_node(name, parent);
     fprintf(stderr, "New scope %s created\n", name);
+    /* Debug history */
+    scope_history[scope_num] = current_scope;
+    scope_num++;
 }
 
 /**
@@ -130,7 +137,7 @@ block_text
 
 text
 	: TEXT {
-			add_symbol(table, $1, current_scope);
+			add_symbol($1, current_scope);
 			$$ = strdup($1->lexeme);
 		}
 	;
@@ -320,7 +327,7 @@ dynamic
 dynamic_assignment
 	: DYNAMIC_ID DYNAMIC_ASSIG DYNAMIC_STRING {
 	bool overwrite = false;
-	            struct wiki_node* variable = find_identifier($1->lexeme, current_scope, table);
+	            struct wiki_node* variable = find_identifier($1->lexeme, current_scope);
 	        if (variable != NULL)
 	        {
                 /* If we find a variable, check for its scope */
@@ -333,7 +340,7 @@ dynamic_assignment
 	        }
 	        if (!overwrite)
 	        {
-                add_symbol(table, $1, current_scope);
+                add_symbol($1, current_scope);
                 /* Set it to variable type */
                 $1->type = TYPE_VARIABLE;
                 /* The value is the actual content */
@@ -347,7 +354,7 @@ dynamic_assignment
 dynamic_print
 	: DYNAMIC_ID {
 //            $$ = produce_output("DYNAMIC_OUTPUT: ", $1->lexeme, NULL);
-            struct wiki_node* variable = find_identifier($1->lexeme, current_scope, table);
+            struct wiki_node* variable = find_identifier($1->lexeme, current_scope);
             if (variable == NULL)
             {
                 char tmp[512];
@@ -368,8 +375,6 @@ dynamic_print
 /* Called by yyparse on error.  */
 int yyerror (char const *s)
 {
-// TODO make line number to work!
-//    fprintf(stderr, "Line: %ld: ", line_number);
     fprintf(stderr, "error, %s: '%s' in line %d\n", s, yytext, yylineno);
 }
 
@@ -378,13 +383,14 @@ int main(void)
     /* Symbol table initialization and test */
     global_scope = scope_init();
     current_scope = global_scope;
-    table = symbol_table_init();
-    fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
-    if (table == NULL)
-        fprintf(stderr, "Unable to allocate memory for symbol table\n");
+//    fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
+//    if (table == NULL)
+//        fprintf(stderr, "Unable to allocate memory for symbol table\n");
     int err = yyparse();
-    fprintf(stderr, "Final symbol table lenght: %d\n", symbol_table_length(table));
-    print_symbol_table(table);
-    symbol_table_free();
+    int i = 0;
+//    fprintf(stderr, "Final symbol table lenght: %d\n", symbol_table_length(table));
+    for (i; i < scope_num; i++)
+        print_symbol_table(scope_history[i]);
+//    symbol_table_free();
     return err;
 }

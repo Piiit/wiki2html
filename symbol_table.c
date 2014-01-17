@@ -11,8 +11,6 @@
 static struct wiki_node* symbol_table = NULL;
 static struct wiki_scope* global_scope = NULL;
 
-static struct wiki_scope* current_scope = NULL;
-
 /** SYMBOL TABLE STUFF HERE **/
 
 struct wiki_node* symbol_table_init(void)
@@ -47,22 +45,32 @@ struct wiki_node* get_new_node(void)
     return node;
 }
 
-void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scope* scope)
+void add_symbol(struct wiki_node* symbol, struct wiki_scope* scope)
 {
-    struct wiki_node* current = root;
-    if (current->next != NULL)
-        do {
-            current = current->next;
-        }
-        while (current->next != NULL);
-    current->next = node;
+    if (scope->local_symbol_table == NULL)
+    {
+        /* Create a fresh symbol table entry */
+        scope->local_symbol_table = symbol;
+    }
+    else 
+    {
+        struct wiki_node* current = scope->local_symbol_table;
+        if (current->next != NULL)
+            do {
+                current = current->next;
+            }
+            while (current->next != NULL);
+        current->next = symbol;
+    }
     /* Set extra node properties */
-    set_scope(node, scope);
+    set_scope(symbol, scope);
 }
 
-struct wiki_node* scan_symbol_table(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table)
+struct wiki_node* scan_symbol_table(char* identifier, struct wiki_scope* scope)
 {
-    struct wiki_node* current = symbol_table;
+    struct wiki_node* current = scope->local_symbol_table;
+    if (current == NULL)
+        return NULL;
     do {
         /* If the symbol is in the current scope, matches the name and it is a variable, then perfect return it! */
         if (current->scope == scope &&
@@ -77,11 +85,11 @@ struct wiki_node* scan_symbol_table(char* identifier, struct wiki_scope* scope, 
     return NULL;
 }
 
-struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table)
+struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope)
 {
     struct wiki_scope* current_scope = scope;
     do {
-        struct wiki_node* abcd = scan_symbol_table(identifier, current_scope, symbol_table);
+        struct wiki_node* abcd = scan_symbol_table(identifier, current_scope);
         if (abcd != NULL)
             return abcd;
 
@@ -105,19 +113,18 @@ int symbol_table_length(struct wiki_node* root)
     return count;
 }
 
-void print_symbol_table(struct wiki_node* root)
+void print_symbol_table(struct wiki_scope* scope)
 {
-    struct wiki_node* current = root;
-    if (current->next != NULL)
-        do {
-            current = current->next;
-            fprintf(stderr, "%s -> %s (scope: %s; stack: ", current->lexeme, current->value, current->scope->name);
-            print_scope_stack(current->scope);
-            fprintf(stderr, ")\n");
-        }
-        while (current->next != NULL);
-    else
-        fprintf(stderr, "%s -> %s\n", current->lexeme, current->value);
+    struct wiki_node* current = scope->local_symbol_table;
+    if (current == NULL)
+        return;
+    do {
+        fprintf(stderr, "%s -> %s (scope: %s; stack: ", current->lexeme, current->value, current->scope->name);
+        print_scope_stack(scope);
+        fprintf(stderr, ")\n");
+        current = current->next;
+    }
+    while (current != NULL);
 }
 
 /** SCOPE STUFF HERE **/
@@ -139,6 +146,7 @@ struct wiki_scope* get_new_scope_node(char* name, struct wiki_scope* parent)
     {
         node->name = name;
         node->parent = parent;
+        node->local_symbol_table = NULL;
     }
     return node;
 }
