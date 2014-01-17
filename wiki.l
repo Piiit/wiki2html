@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbol_table.h"
+#include "utils.c"
 
 //struct wiki_node* current_lexeme = NULL;
 
@@ -33,8 +34,8 @@ BOLD				"\*\*"
 ITALIC 				"\/\/"
 UNDERLINE			"__"
 MONOSPACE			"\'\'"
-HEADER_ENTRY		^("=")+
-HEADER_EXIT			"="+{WS}*{NEWLINE}
+HEADER_ENTRY		^("=")+{WS}*
+HEADER_EXIT			{WS}*"="+{WS}*{NEWLINE}
 LIST_ITEM_ENTRY		^({WS}*\*{WS})
 LIST_ITEM_EXIT		{NEWLINE}
 LIST_EXIT			({WS}*[^\*])
@@ -113,7 +114,9 @@ DYNAMIC_ASSIG		":="
 {HEADER_ENTRY} { 
 	BEGIN HEADER;
 	fprintf(stderr, "HEADER_ENTRY: %s\n", yytext);
-	yylval.node = create_node(strdup(yytext), yylineno);
+	char *header = trim(strdup(yytext));
+	 
+	yylval.node = create_node(header, yylineno);
 	return HEADER_ENTRY;
 }
 

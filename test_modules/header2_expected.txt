@@ -1,7 +1,7 @@
 before
 <h1>header</h1>
 after
-<h2>test == asdf asdf asdf asdf </h2>
+<h2>test == asdf asdf asdf asdf</h2>
 
 asdf === test3 ===
 
