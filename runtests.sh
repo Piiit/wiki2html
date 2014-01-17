@@ -10,7 +10,7 @@ do
 		if [ -f "${ARG%.*}_expected.txt" ]; then 
 			echo ============================================================================= >&2
 			echo TESTING: $ARG >&2
-			./wiki < "$ARG" 2>/dev/null | diff -c ${ARG%.*}_expected.txt - >&2
+			./wiki < "$ARG" 2>/dev/null | diff -Bbc ${ARG%.*}_expected.txt - >&2
 			if [ $? -eq 0 ]; then
 				echo "TEST SUCCEEDED: $ARG"
 			else
