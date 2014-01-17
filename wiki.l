@@ -48,11 +48,13 @@ DYNAMIC_ASSIG		":="
 %%
 
 <<EOF>> {
+	fprintf(stderr, "EOF: %s\n", yytext);
 	return END_OF_FILE;
 }
 
 <*>{BOLD} {
 	yylval.node = create_node(strdup(yytext), yylineno);
+	fprintf(stderr, "BOLD: %s\n", yytext);
 	return BOLD;
 }
 
@@ -159,7 +161,8 @@ DYNAMIC_ASSIG		":="
 	return LIST_EXIT;
 }
 
-<*>. {
+<*>\n|. {
+	fprintf(stderr, "TEXT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return TEXT;
 }

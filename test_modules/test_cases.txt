@@ -1,6 +1,7 @@
 Before everything...
 **test** 123 
-**bold2** //italic//
+**bold2 has multiple 
+lines** //italic//
 == head = er 2 ===
 //italic**bold**//
 **bold//italic//bold**

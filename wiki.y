@@ -164,8 +164,9 @@ bold_parts
 	;
 
 bold_content
-	: bold_parts
+	: bold_parts 
 	| bold_content bold_parts {
+		//	printf("BP: '%s'\n", $2);
             $$ = produce_output($$, $2, NULL);
         }
 	;
