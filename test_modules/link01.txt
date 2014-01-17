@@ -1,0 +1,7 @@
+Simple link with protocol: [[http://www.google.de]]
+Simple link without protocol: [[www.unibz.it]]
+Link with a name (piped): [[www.unibz.it|Uni BZ]]
+Link with a name (space): [[www.unibz.it Uni BZ]]
+
+* Link as a list item: [[Testing]]
+* Next item

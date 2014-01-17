@@ -5,3 +5,4 @@ This is a <b>wiki</b> parser basically, where you can easily produce HTML-compli
 <h2>Is that free?</h2>
 Yes it is absolutely <i>free</i> and <i>open source</i>.
 <h2>Who wrote it?</h2>
+Lorenzo & Peter for a Compilers course project.

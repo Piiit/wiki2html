@@ -1,0 +1,9 @@
+Simple link with protocol: <a href='http://www.google.de'>http://www.google.de</a>
+Simple link without protocol: <a href='www.unibz.it'>www.unibz.it</a>
+Link with a name (piped): <a href='www.unibz.it'>Uni BZ</a>
+Link with a name (space): <a href='www.unibz.it'>Uni BZ</a>
+
+<ul>
+<li>Link as a list item: <a href='Testing'>Testing</a></li>
+<li>Next item</li>
+</ul>
