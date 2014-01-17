@@ -23,6 +23,7 @@ struct wiki_node* create_node(char* lexeme, long line_number)
 %x LIST_ITEM
 %x LIST
 %x DYNAMIC
+%x LINK
 
 /* Comments */
 /* TODO think a single line comment, if needed ;) */
@@ -44,8 +45,38 @@ DYNAMIC_EXIT		"}}"
 DYNAMIC_STRING      "\""([^\]|"/"[^\"])*"\""
 DYNAMIC_ID			[a-zA-Z][a-zA-Z0-9]*
 DYNAMIC_ASSIG		":="
+LINK_ENTRY			"\[\["
+LINK_EXIT			"\]\]"
+LINK_URL			([\w]+?:\/\/)*[^ \"\n\r\t<\]\|]+
+LINK_SEPARATOR		[\| ]
+LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 %%
+
+<*>{LINK_ENTRY} {
+	BEGIN LINK;
+	yylval.node = create_node(strdup(yytext), yylineno);
+	fprintf(stderr, "LINK_ENTRY: %s\n", yytext);
+	return LINK_ENTRY;
+}
+
+<LINK>{LINK_EXIT} {
+	BEGIN 0;
+	fprintf(stderr, "LINK_EXIT: %s\n", yytext);
+	return LINK_EXIT;
+}
+
+<LINK>{LINK_URL} {
+	yylval.node = create_node(strdup(yytext), yylineno);
+	fprintf(stderr, "LINK_URL: %s\n", yytext);
+	return LINK_URL;
+}
+
+<LINK>{LINK_NAME} {
+	yylval.node = create_node(strdup(yytext), yylineno);
+	fprintf(stderr, "LINK_NAME: %s\n", yytext);
+	return LINK_NAME;
+}
 
 <<EOF>> {
 	fprintf(stderr, "EOF: %s\n", yytext);

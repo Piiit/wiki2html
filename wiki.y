@@ -80,6 +80,11 @@ struct wiki_scope* scope_go_up(void)
 %token <node> DYNAMIC_ID
 %token <node> DYNAMIC_ASSIG
 %token END_OF_FILE
+%token <node> LINK_ENTRY
+%token LINK_EXIT
+%token <node> LINK_URL
+%token <node> LINK_NAME
+%token LINK_SEPARATOR
 
 %type <result> block
 %type <result> block_text
@@ -106,6 +111,7 @@ struct wiki_scope* scope_go_up(void)
 %type <result> dynamic
 %type <result> dynamic_assignment
 %type <result> dynamic_print
+%type <result> link 
 
 %start wikitext
 
@@ -119,7 +125,10 @@ wikitext
 	;
 
 block
-	: block_text
+	: block_text {
+//			$$ = produce_output("<p>\n", $1, "</p>\n");
+//THIS DOES NOT WORK! it produces one paragraph for each character
+		}
 	| header
 	| list 	{
 			$$ = produce_output("<ul>\n", $1, "</ul>\n");
@@ -133,6 +142,20 @@ block_text
 	| monospace
 	| underline
 	| text
+	| link
+	;
+
+link
+	: LINK_ENTRY LINK_URL LINK_NAME LINK_EXIT {
+			char buf[1024];
+			snprintf(buf, sizeof buf, "<a href='%s'>%s</a>", $2->lexeme, $3->lexeme + 1);
+			$$ = produce_output(buf, NULL, NULL);
+		}
+	| LINK_ENTRY LINK_URL LINK_EXIT {
+			char buf[1024];
+			snprintf(buf, sizeof buf, "<a href='%s'>%s</a>", $2->lexeme, $2->lexeme);
+			$$ = produce_output(buf, NULL, NULL);
+		}
 	;
 
 text
