@@ -66,11 +66,13 @@ struct wiki_scope* scope_go_up(void)
 %token <node> HEADER_EXIT
 %token <node> LIST_ITEM_ENTRY
 %token <node> LIST_ITEM_EXIT
+%token LIST_EXIT
 %token <node> DYNAMIC_ENTRY
 %token <node> DYNAMIC_EXIT
 %token <node> DYNAMIC_STRING
 %token <node> DYNAMIC_ID
 %token <node> DYNAMIC_ASSIG
+%token END_OF_FILE
 
 %type <result> block
 %type <result> block_text
@@ -111,9 +113,11 @@ wikitext
 
 block
 	: block_text
-	| dynamic
 	| header
-	| list 	;
+	| list 	{
+			$$ = produce_output("<ul>\n", $1, "</ul>\n");
+		}
+	;
 
 block_text
     : dynamic
@@ -271,9 +275,14 @@ header_parts
 	;
 
 list
-	: list_item 
-	| list list_item {
-			$$ = produce_output($$, $2, NULL);
+	: list_item LIST_EXIT {
+			$$ = produce_output($1, NULL, NULL);
+		}
+	| list_item END_OF_FILE {
+			$$ = produce_output($1, NULL, NULL);
+		}
+	| list_item list {
+			$$ = produce_output($1, $2, NULL);
 		} 
 	;
 

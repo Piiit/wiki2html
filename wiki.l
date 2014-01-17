@@ -20,6 +20,7 @@ struct wiki_node* create_node(char* lexeme, long line_number)
 /* Scopes (aka named lexer states) */
 %x HEADER
 %x LIST_ITEM
+%x LIST
 %x DYNAMIC
 
 /* Comments */
@@ -35,7 +36,8 @@ MONOSPACE			"\'\'"
 HEADER_ENTRY		^("=")+
 HEADER_EXIT			"="+{WS}*{NEWLINE}
 LIST_ITEM_ENTRY		^({WS}*\*{WS})
-LIST_ITEM_EXIT		{WS}*{NEWLINE}
+LIST_ITEM_EXIT		{NEWLINE}
+LIST_EXIT			({WS}*[^\*])
 DYNAMIC_ENTRY		"{{"
 DYNAMIC_EXIT		"}}"
 DYNAMIC_STRING      "\""([^\]|"/"[^\"])*"\""
@@ -43,6 +45,10 @@ DYNAMIC_ID			[a-zA-Z][a-zA-Z0-9]*
 DYNAMIC_ASSIG		":="
 
 %%
+
+<<EOF>> {
+	return END_OF_FILE;
+}
 
 <*>{BOLD} {
 	yylval.node = create_node(strdup(yytext), yylineno);
@@ -58,11 +64,9 @@ DYNAMIC_ASSIG		":="
 	yylval.node = create_node(strdup(yytext), yylineno); 
 	return UNDERLINE;
 }
-
 <*>{MONOSPACE} {
 	yylval.node = create_node(strdup(yytext), yylineno); 
-	return MONOSPACE;
-}
+	return MONOSPACE;}
 
 <*>{DYNAMIC_ENTRY} {
 	BEGIN DYNAMIC;
@@ -125,6 +129,7 @@ DYNAMIC_ASSIG		":="
 	return HEADER_EXIT;
 }
 
+
 <*>{LIST_ITEM_ENTRY} { 
 	BEGIN LIST_ITEM;
 	fprintf(stderr, "LIST_ITEM_ENTRY: %s\n", yytext);
@@ -134,11 +139,21 @@ DYNAMIC_ASSIG		":="
 
 <LIST_ITEM>{LIST_ITEM_EXIT} {
 	// Return to default scope
-	BEGIN 0; 
+	BEGIN LIST; 
 
 	fprintf(stderr, "LIST_ITEM_EXIT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return LIST_ITEM_EXIT;
+}
+
+<LIST>{LIST_EXIT} {
+	BEGIN 0;
+	fprintf(stderr, "LIST_EXIT: %s\n", yytext);
+	
+	//Restore input buffer...
+	yyless(0);
+
+	return LIST_EXIT;
 }
 
 <*>. {

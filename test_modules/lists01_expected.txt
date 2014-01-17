@@ -1,0 +1,6 @@
+<ul>
+<li>item 1</li>
+<li><b>bold item 2</b></li>
+<li>item 3</li>
+</ul>
+FINISHED
