@@ -112,10 +112,7 @@ block
 	: block_text
 	| dynamic
 	| header
-	| list {
-			$$ = produce_output("<ul>\n", $1, "</ul>\n");
-		}
-	;
+	| list 	;
 
 block_text
 	: bold
@@ -247,6 +244,9 @@ header
     header_content
     HEADER_EXIT {
             int level = strlen($1->lexeme);
+			if(level > 6) {
+				level = 6;
+			}
             char buf1[10];
             char buf2[10];
             sprintf(buf1, "<h%d>", level);

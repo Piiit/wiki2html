@@ -34,13 +34,13 @@ UNDERLINE			"__"
 MONOSPACE			"\'\'"
 HEADER_ENTRY		^("=")+
 HEADER_EXIT			"="+{WS}*{NEWLINE}
-LIST_ITEM_ENTRY		^([ ]*\*)
-LIST_ITEM_EXIT		{NEWLINE}
+LIST_ITEM_ENTRY		^({WS}*\*{WS})
+LIST_ITEM_EXIT		{WS}*{NEWLINE}
 DYNAMIC_ENTRY		"{{"
 DYNAMIC_EXIT		"}}"
 DYNAMIC_STRING      "\""([^\]|"/"[^\"])*"\""
 DYNAMIC_ID			[a-zA-Z][a-zA-Z0-9]*
-DYNAMIC_ASSIG		{WS}*":="{WS}*
+DYNAMIC_ASSIG		":="
 
 %%
 
@@ -69,6 +69,10 @@ DYNAMIC_ASSIG		{WS}*":="{WS}*
 //	fprintf(stderr, "DYNAMIC_ENTRY: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return DYNAMIC_ENTRY;
+}
+
+<DYNAMIC>{WS} {
+	/* ignore white spaces */
 }
 
 <DYNAMIC>{DYNAMIC_EXIT} {
@@ -121,7 +125,7 @@ DYNAMIC_ASSIG		{WS}*":="{WS}*
 	return HEADER_EXIT;
 }
 
-{LIST_ITEM_ENTRY} { 
+<*>{LIST_ITEM_ENTRY} { 
 	BEGIN LIST_ITEM;
 	fprintf(stderr, "LIST_ITEM_ENTRY: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);

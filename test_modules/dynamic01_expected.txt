@@ -1,1 +1,4 @@
-Variable x has the value "".
+
+Variable x has the value "111".
+
+Variable x has the value "ValueX".

@@ -1,1 +1,4 @@
-Variable x has the value "{{x}}"
+{{x:="111"}}
+Variable x has the value "{{x}}".
+{{x := "ValueX"  }}
+Variable x has the value "{{x}}".
