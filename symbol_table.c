@@ -62,44 +62,32 @@ void add_symbol(struct wiki_node* root, struct wiki_node* node, struct wiki_scop
 
 struct wiki_node* scan_symbol_table(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table)
 {
-            struct wiki_node* current = symbol_table;
-            if (current->next != NULL)
-            {
-                do {
-                    /* If the symbol is in the current scope, matches the name and it is a variable, then perfect return it! */
-                    if (current->scope == scope &&
-                        strcmp(current->lexeme, identifier) == 0 &&
-                        current->type == TYPE_VARIABLE)
-                    {
-                        return current;
-                    }
-                    current = current->next;
-                }
-                while (current->next != NULL);
-            }
-            return NULL;
+    struct wiki_node* current = symbol_table;
+    do {
+        /* If the symbol is in the current scope, matches the name and it is a variable, then perfect return it! */
+        if (current->scope == scope &&
+        strcmp(current->lexeme, identifier) == 0 &&
+        current->type == TYPE_VARIABLE)
+        {
+            return current;
+        }
+        current = current->next;
+    }
+    while (current != NULL);
+    return NULL;
 }
 
 struct wiki_node* find_identifier(char* identifier, struct wiki_scope* scope, struct wiki_node* symbol_table)
 {
     struct wiki_scope* current_scope = scope;
-    if (current_scope->parent != NULL)
-    {
-        do {
+    do {
+        struct wiki_node* abcd = scan_symbol_table(identifier, current_scope, symbol_table);
+        if (abcd != NULL)
+            return abcd;
 
-            struct wiki_node* abcd = scan_symbol_table(identifier, current_scope, symbol_table);
-            if (abcd != NULL)
-                return abcd;
-
-            current_scope = current_scope->parent;
-        }
-        while (current_scope->parent != NULL);
+        current_scope = current_scope->parent;
     }
-    else
-    {
-        /* Special case for main */
-        return scan_symbol_table(identifier, current_scope, symbol_table);
-    }
+    while (current_scope != NULL);
     /* We did not find anything */
     return NULL;
 }

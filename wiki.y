@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "symbol_table.h"
 
@@ -115,7 +116,8 @@ block
 	| list 	;
 
 block_text
-	: bold
+    : dynamic
+	| bold
 	| italic
 	| monospace
 	| underline
@@ -143,7 +145,8 @@ bold
 	;
 
 bold_parts
-	: text
+    : dynamic
+	| text
 	| italic
 	| underline
 	| monospace
@@ -307,11 +310,26 @@ dynamic
 
 dynamic_assignment
 	: DYNAMIC_ID DYNAMIC_ASSIG DYNAMIC_STRING {
-            add_symbol(table, $1, current_scope);
-            /* Set it to variable type */
-            $1->type = TYPE_VARIABLE;
-            /* The value is the actual content */
-            $1->value = strdup($3->lexeme);
+	bool overwrite = false;
+	            struct wiki_node* variable = find_identifier($1->lexeme, current_scope, table);
+	        if (variable != NULL)
+	        {
+                /* If we find a variable, check for its scope */
+                if (variable->scope == current_scope)
+                {
+                    /* If we have it, overwrite */
+                    variable->value = strdup($3->lexeme);
+                    overwrite = true;
+                }
+	        }
+	        if (!overwrite)
+	        {
+                add_symbol(table, $1, current_scope);
+                /* Set it to variable type */
+                $1->type = TYPE_VARIABLE;
+                /* The value is the actual content */
+                $1->value = strdup($3->lexeme);
+            }
             $$ = ""; // nothing is outputted when assigning
 //			$$ = produce_output("DYNAMIC_ASSIGNMENT: ", $1->lexeme, $3->lexeme);			
 		}
