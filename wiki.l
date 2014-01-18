@@ -136,7 +136,7 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 <DYNAMIC>{DYNAMIC_STRING} {
 	fprintf(stderr, "DYNAMIC_STRING: %s\n", yytext);
 	char *to = strndup(yytext + 1, yyleng - 2);
-	yylval.node = create_node(strdup(to), yylineno);
+	yylval.node = create_node(to, yylineno);
 	return DYNAMIC_STRING;
 }
 
