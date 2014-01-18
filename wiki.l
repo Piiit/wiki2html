@@ -186,6 +186,7 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 <LIST_ITEM>{LIST_ITEM_EXIT} {
 	// Return to default scope
+	lexer_states_pop();
 	BEGIN LIST; 
 
 	fprintf(stderr, "LIST_ITEM_EXIT: %s\n", yytext);
