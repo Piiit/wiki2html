@@ -122,6 +122,10 @@ wikitext
 	| wikitext block {
             printf("%s", $2);
         }
+	| wikitext END_OF_FILE {
+			/* Empty input */
+			exit (0);	
+		}
 	;
 
 block
