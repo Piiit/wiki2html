@@ -16,6 +16,8 @@ struct wiki_node* create_node(char* lexeme, long line_number)
     return node;
 }
 
+int last_state = -1;
+
 %}
 
 /* Scopes (aka named lexer states) */
@@ -55,13 +57,15 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 <*>{LINK_ENTRY} {
 	BEGIN LINK;
+	lexer_states_push(LINK);
+
 	yylval.node = create_node(strdup(yytext), yylineno);
 	fprintf(stderr, "LINK_ENTRY: %s\n", yytext);
 	return LINK_ENTRY;
 }
 
 <LINK>{LINK_EXIT} {
-	BEGIN 0;
+	BEGIN lexer_states_pop();
 	fprintf(stderr, "LINK_EXIT: %s\n", yytext);
 	return LINK_EXIT;
 }
@@ -104,6 +108,8 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 <*>{DYNAMIC_ENTRY} {
 	BEGIN DYNAMIC;
+	lexer_states_push(DYNAMIC);
+
 	fprintf(stderr, "DYNAMIC_ENTRY: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return DYNAMIC_ENTRY;
@@ -115,7 +121,7 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 <DYNAMIC>{DYNAMIC_EXIT} {
 	// Return to default scope
-	BEGIN 0; 
+	BEGIN lexer_states_pop(); 
 	
 	fprintf(stderr, "DYNAMIC_EXIT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
@@ -146,6 +152,8 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 {HEADER_ENTRY} { 
 	BEGIN HEADER;
+	lexer_states_push(HEADER);
+
 	fprintf(stderr, "HEADER_ENTRY: %s\n", yytext);
 	char *header = trim(strdup(yytext));
 	 
@@ -155,7 +163,7 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 <HEADER>{HEADER_EXIT} {
 	// Return to default scope
-	BEGIN 0; 
+	BEGIN lexer_states_pop(); 
 	
 	// Restore the last {NEWLINE} character
 	yyless(strlen(yytext) - 1);
@@ -169,7 +177,9 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 <*>{LIST_ITEM_ENTRY} { 
 	BEGIN LIST_ITEM;
-	fprintf(stderr, "LIST_ITEM_ENTRY: %s\n", yytext);
+	lexer_states_push(LIST_ITEM);
+
+	fprintf(stderr, "LIST_ITEM_ENTRY (state=%d): %s\n", last_state, yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return LIST_ITEM_ENTRY;
 }
@@ -184,7 +194,7 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 }
 
 <LIST>{LIST_EXIT} {
-	BEGIN 0;
+	BEGIN lexer_states_pop();
 	fprintf(stderr, "LIST_EXIT: %s\n", yytext);
 	
 	//Restore input buffer...
@@ -194,6 +204,7 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 }
 
 <*>\n|. {
+	lexer_states_get();
 	fprintf(stderr, "TEXT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return TEXT;

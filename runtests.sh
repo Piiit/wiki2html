@@ -35,9 +35,7 @@ done
 shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
-clear
-make clean >&2
-make >&2
+clear && make clean >&2 && make >&2 || exit 1
 
 for ARG in "$@"
 do
