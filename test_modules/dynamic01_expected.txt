@@ -1,4 +1,14 @@
+<!doctype html>
+<html>
+<head>
+<title>wiki2html: no title</title>
+</head>
+<body>
 
 Variable x has the value "111".
 
 Variable x has the value "ValueX".
+
+</body>
+</html>
+

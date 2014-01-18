@@ -1,3 +1,12 @@
+<!doctype html>
+<html>
+<head>
+<title>wiki2html: no title</title>
+</head>
+<body>
 <b>test asdf
 multiline
 </b>
+</body>
+</html>
+

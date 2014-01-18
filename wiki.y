@@ -56,6 +56,9 @@ struct wiki_scope* scope_go_up(void)
     current_scope = current_scope->parent;
 }
 
+char template_html_header[100] = "<!doctype html>\n<html>\n<head>\n<title>wiki2html: no title</title>\n</head>\n<body>\n";
+char template_html_footer[100] = "</body>\n</html>\n";
+
 %}
 
 %union {
@@ -86,6 +89,7 @@ struct wiki_scope* scope_go_up(void)
 %token <node> LINK_NAME
 %token LINK_SEPARATOR
 
+%type <result> wikitext
 %type <result> block
 %type <result> block_text
 %type <result> text
@@ -120,10 +124,12 @@ struct wiki_scope* scope_go_up(void)
 wikitext
 	: /* empty */
 	| wikitext block {
-            printf("%s", $2);
+			$$ = produce_output($1, $2, NULL);
         }
 	| wikitext END_OF_FILE {
 			/* Empty input */
+			char *text = produce_output(template_html_header, $1, template_html_footer);
+			printf(text);
 			exit (0);	
 		}
 	;

@@ -1,3 +1,9 @@
+<!doctype html>
+<html>
+<head>
+<title>wiki2html: no title</title>
+</head>
+<body>
 <h1>This is an example generated with wiki2html</h1>
 Welcome from Lorenzo & Peter!
 <h2>What is that?</h2>
@@ -6,3 +12,6 @@ This is a <b>wiki</b> parser basically, where you can easily produce HTML-compli
 Yes it is absolutely <i>free</i> and <i>open source</i>.
 <h2>Who wrote it?</h2>
 Lorenzo & Peter for a Compilers course project.
+</body>
+</html>
+

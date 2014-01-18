@@ -1,5 +1,14 @@
+<!doctype html>
+<html>
+<head>
+<title>wiki2html: no title</title>
+</head>
+<body>
 <ul>
 <li>item 1</li>
 <li><b>bold item 2</b></li>
 <li>item 3</li>
 </ul>
+</body>
+</html>
+

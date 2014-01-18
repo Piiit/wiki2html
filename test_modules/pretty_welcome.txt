@@ -8,3 +8,4 @@ This is a **wiki** parser basically, where you can easily produce HTML-compliant
 Yes it is absolutely //free// and //open source//.
 ==Who wrote it?==
 {{authorA}} & {{authorB}} for a Compilers course project.
+

@@ -1,3 +1,9 @@
+<!doctype html>
+<html>
+<head>
+<title>wiki2html: no title</title>
+</head>
+<body>
 Before everything...
 <b>test</b> 123 
 <b>bold2 has multiple 
@@ -21,3 +27,6 @@ END
 x=. 
 x=3.
 EOF
+</body>
+</html>
+
