@@ -362,8 +362,8 @@ dynamic
 
 dynamic_assignment
 	: DYNAMIC_ID DYNAMIC_ASSIG DYNAMIC_STRING {
-	bool overwrite = false;
-	            struct wiki_node* variable = find_identifier($1->lexeme, current_scope);
+            bool overwrite = false;
+	        struct wiki_node* variable = find_identifier($1->lexeme, current_scope);
 	        if (variable != NULL)
 	        {
                 /* If we find a variable, check for its scope */
@@ -383,20 +383,19 @@ dynamic_assignment
                 $1->value = strdup($3->lexeme);
             }
             $$ = ""; // nothing is outputted when assigning
-//			$$ = produce_output("DYNAMIC_ASSIGNMENT: ", $1->lexeme, $3->lexeme);			
 		}
 	;
 
 dynamic_print
 	: DYNAMIC_ID {
-//            $$ = produce_output("DYNAMIC_OUTPUT: ", $1->lexeme, NULL);
             struct wiki_node* variable = find_identifier($1->lexeme, current_scope);
             if (variable == NULL)
             {
                 char tmp[512];
                 sprintf(tmp, "%s not found!", $1->lexeme);
                 yyerror(tmp);
-                exit(1);
+                /* Basically like PHP: just a warning, but no fatal error, just nothing */
+                $$ = "";
             }
             else {
                 $$ = strdup(variable->value);
