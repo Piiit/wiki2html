@@ -206,7 +206,7 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 
 <*>\n|. {
 	lexer_states_get();
-	fprintf(stderr, "TEXT: %s\n", yytext);
+	//fprintf(stderr, "TEXT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return TEXT;
 }

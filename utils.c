@@ -24,7 +24,7 @@ char *trim(char *str)
   return str;
 }
 
-#define LEXER_STATE_SIZE 10
+#define LEXER_STATE_SIZE 512
 int lexer_states[LEXER_STATE_SIZE] = {0};
 int lexer_state = 0;
 
