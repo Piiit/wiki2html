@@ -89,7 +89,7 @@ char template_html_footer[100] = "</body>\n</html>\n";
 %token <node> LINK_NAME
 %token LINK_SEPARATOR
 
-%type <result> wikitext
+/*%type <result> wikitext*/
 %type <result> block
 %type <result> block_text
 %type <result> text
@@ -124,21 +124,16 @@ char template_html_footer[100] = "</body>\n</html>\n";
 wikitext
 	: /* empty */
 	| wikitext block {
-			$$ = produce_output($1, $2, NULL);
+			printf("%s", $2);
         }
 	| wikitext END_OF_FILE {
-			/* Empty input */
-			char *text = produce_output(template_html_header, $1, template_html_footer);
-			printf(text);
-			exit (0);	
+			/* END_OF_FILE reached, force yyparse return */
+			return 0;
 		}
 	;
 
 block
-	: block_text {
-//			$$ = produce_output("<p>\n", $1, "</p>\n");
-//THIS DOES NOT WORK! it produces one paragraph for each character
-		}
+	: block_text 
 	| header
 	| list 	{
 			$$ = produce_output("<ul>\n", $1, "</ul>\n");
@@ -181,8 +176,6 @@ bold
         }
     bold_content
     BOLD {
-            //char tmp[120];
-            //sprintf(tmp, "<b id=\"%s\">", current_scope->name);
             $$ = produce_output("<b>", $3, "</b>");
             scope_go_up();
         }
@@ -222,6 +215,7 @@ italic_parts
 	| bold
 	| underline
 	| monospace
+	| dynamic
 	;
 
 italic_content
@@ -249,6 +243,7 @@ underline_parts
 	| bold
 	| italic
 	| monospace
+	| dynamic
 	;
 
 underline_content 
@@ -276,6 +271,7 @@ monospace_parts
 	| bold
 	| italic
 	| underline
+	| dynamic
 	;
 
 monospace_content 
@@ -431,7 +427,9 @@ int main(void)
 //    fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
 //    if (table == NULL)
 //        fprintf(stderr, "Unable to allocate memory for symbol table\n");
-    int err = yyparse();
+    printf(template_html_header);
+	int err = yyparse();
+	printf(template_html_footer);
     int i = 0;
 //    fprintf(stderr, "Final symbol table lenght: %d\n", symbol_table_length(table));
     for (i; i < scope_num; i++)

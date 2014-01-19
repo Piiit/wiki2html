@@ -37,27 +37,34 @@ shift $((OPTIND-1))
 
 clear && make clean >&2 && make >&2 || exit 1
 
+ERRCOUNT=0
+SKIPCOUNT=0
+TESTCOUNT=0
+
 for ARG in "$@"
 do
 	if [[ ! "$ARG" =~ "_expected.txt" ]]; then 
 		if [ -f "${ARG%.*}_expected.txt" ]; then 
-			echo ============================================================================= >&2
-			echo TESTING: $ARG >&2
+			let TESTCOUNT=TESTCOUNT+1
+			test $VERBOSE -eq 1 && echo ============================================================================= >&2
+			test $VERBOSE -eq 1 && echo TESTING: $ARG >&2
 			./wiki < "$ARG" 2>/tmp/wiki2html_tests_debug | diff -Bbc ${ARG%.*}_expected.txt - >&2
 			if [ $? -eq 0 ]; then
 				echo "TEST SUCCEEDED: $ARG"
 			else
-				if [ $VERBOSE -eq 1 ]; then
-					cat	/tmp/wiki2html_tests_debug
-				fi
-				echo "TEST FAILED: $ARG"
+				test $VERBOSE -eq 1 && cat /tmp/wiki2html_tests_debug
+				echo "TEST FAILED   : $ARG"
+				let ERRCOUNT=ERRCOUNT+1
 			fi
-			echo ============================================================================= >&2
+			test $VERBOSE -eq 1 && echo ============================================================================= >&2
 		else
-			echo "TEST SKIPPED: '$ARG' (no EXPECTED RESULT file)"
+			let SKIPCOUNT=SKIPCOUNT+1
+			test $VERBOSE -eq 1 && echo "TEST SKIPPED: '$ARG' (no EXPECTED RESULT file)"
 		fi
 	fi
 done
 
+echo ">>> DONE: $TESTCOUNT tests, $ERRCOUNT failures, $SKIPCOUNT skipped."
+test $ERRCOUNT -eq 0 && echo ">>> RESULT: ALL TESTS PASSED!" || echo ">>> RESULT: ERRORS REPORTED!"
 
 exit 0
