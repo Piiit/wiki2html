@@ -56,8 +56,12 @@ struct wiki_scope* scope_go_up(void)
     current_scope = current_scope->parent;
 }
 
-char template_html_header[100] = "<!doctype html>\n<html>\n<head>\n<title>wiki2html: no title</title>\n</head>\n<body>\n";
-char template_html_footer[100] = "</body>\n</html>\n";
+bool has_toc = true;
+bool has_title = false;
+char title[512] = "wiki2html: (no title)";
+char toc[4096] = "";
+int toc_id = 0;
+char wikitext[10000] = "";
 
 %}
 
@@ -88,6 +92,7 @@ char template_html_footer[100] = "</body>\n</html>\n";
 %token <node> LINK_URL
 %token <node> LINK_NAME
 %token LINK_SEPARATOR
+%token NO_TOC
 
 /*%type <result> wikitext*/
 %type <result> block
@@ -124,7 +129,7 @@ char template_html_footer[100] = "</body>\n</html>\n";
 wikitext
 	: /* empty */
 	| wikitext block {
-			printf("%s", $2);
+			sprintf(wikitext, "%s%s", wikitext, $2);
         }
 	| wikitext END_OF_FILE {
 			/* END_OF_FILE reached, force yyparse return */
@@ -135,8 +140,17 @@ wikitext
 block
 	: block_text 
 	| header
+	| notoc {
+			$$ = "";
+		} 
 	| list 	{
 			$$ = produce_output("<ul>\n", $1, "</ul>\n");
+		}
+	;
+
+notoc
+	: NO_TOC  {
+			has_toc = false;
 		}
 	;
 
@@ -153,12 +167,12 @@ block_text
 link
 	: LINK_ENTRY LINK_URL LINK_NAME LINK_EXIT {
 			char buf[1024];
-			snprintf(buf, sizeof buf, "<a href='%s'>%s</a>", $2->lexeme, $3->lexeme + 1);
+			snprintf(buf, sizeof buf, "<a href='%s'>%s</a>", trim(strdup($2->lexeme)), trim(strdup($3->lexeme + 1)));
 			$$ = produce_output(buf, NULL, NULL);
 		}
 	| LINK_ENTRY LINK_URL LINK_EXIT {
 			char buf[1024];
-			snprintf(buf, sizeof buf, "<a href='%s'>%s</a>", $2->lexeme, $2->lexeme);
+			snprintf(buf, sizeof buf, "<a href='%s'>%s</a>", trim(strdup($2->lexeme)), trim(strdup($2->lexeme)));
 			$$ = produce_output(buf, NULL, NULL);
 		}
 	;
@@ -192,7 +206,6 @@ bold_parts
 bold_content
 	: bold_parts 
 	| bold_content bold_parts {
-		//	printf("BP: '%s'\n", $2);
             $$ = produce_output($$, $2, NULL);
         }
 	;
@@ -203,8 +216,6 @@ italic
         }
     italic_content
     ITALIC {
-            //char tmp[120];
-            //sprintf(tmp, "<b id=\"%s\">", current_scope->name);
             $$ = produce_output("<i>", $3, "</i>");
             scope_go_up();
         }
@@ -231,8 +242,6 @@ underline
         }
     underline_content
     UNDERLINE {
-            //char tmp[120];
-            //sprintf(tmp, "<b id=\"%s\">", current_scope->name);
             $$ = produce_output("<span style='text-decoration: underline;'>", $3, "</span>");
             scope_go_up();
         }
@@ -259,8 +268,6 @@ monospace
         }
     monospace_content
     MONOSPACE {
-            //char tmp[120];
-            //sprintf(tmp, "<b id=\"%s\">", current_scope->name);
             $$ = produce_output("<span style='font-family: monospace;'>", $3, "</span>");
             scope_go_up();
         }
@@ -291,12 +298,12 @@ header
 			if(level > 6) {
 				level = 6;
 			}
-            char buf1[10];
+            char buf1[30];
             char buf2[10];
-            sprintf(buf1, "<h%d>", level);
+            sprintf(buf1, "<h%d id='header_%d'>", level, toc_id);
             sprintf(buf2, "</h%d>", level);
 			
-			// Too many equal signs? Produce output... 
+			// Too many equal signs? Produce output as "text"... 
 			char *equalsigns = trim(strdup($4->lexeme));
 			if(level < strlen(equalsigns)) {
 				char buf3[512];
@@ -307,6 +314,14 @@ header
 			} else {
 				$$ = produce_output(buf1, $3, buf2);
 			}
+
+			if(!has_title) {
+				has_title = true;
+				strcpy(title, trim(strdup($3)));
+			}
+
+			sprintf(toc, "%s<li><a href='#header_%d'>%s</a></li>\n", toc, toc_id, trim(strdup($3)));
+			toc_id++;
             scope_go_up();
         }
 	;
@@ -426,10 +441,15 @@ int main(void)
     current_scope = global_scope;
 //    fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
 //    if (table == NULL)
-//        fprintf(stderr, "Unable to allocate memory for symbol table\n");
-    printf(template_html_header);
+//        fprintf(stderr, "Unable to allocate memory for symbol table\n")
 	int err = yyparse();
-	printf(template_html_footer);
+	
+	printf("<!doctype html>\n<html>\n<head>\n<title>%s</title>\n</head>\n<body>\n", title);
+	if(has_toc) {
+		printf("<div id='toc'><b>Table of content:</b><br />\n<ul>\n%s</ul></div>\n", toc);
+	}
+	printf("%s", wikitext);
+	printf("</body>\n</html>\n");
     int i = 0;
 //    fprintf(stderr, "Final symbol table lenght: %d\n", symbol_table_length(table));
     for (i; i < scope_num; i++)

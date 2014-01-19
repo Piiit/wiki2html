@@ -52,6 +52,7 @@ LINK_EXIT			"\]\]"
 LINK_URL			([\w]+?:\/\/)*[^ \"\n\r\t<\]\|]+
 LINK_SEPARATOR		[\| ]
 LINK_NAME			{LINK_SEPARATOR}[^\]]*
+NO_TOC				"~~NOTOC~~"
 
 %%
 
@@ -62,6 +63,10 @@ LINK_NAME			{LINK_SEPARATOR}[^\]]*
 	yylval.node = create_node(strdup(yytext), yylineno);
 	fprintf(stderr, "LINK_ENTRY: %s\n", yytext);
 	return LINK_ENTRY;
+}
+
+{NO_TOC} {
+	return NO_TOC;
 }
 
 <LINK>{LINK_EXIT} {
