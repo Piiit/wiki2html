@@ -1,13 +1,13 @@
 <!doctype html>
 <html>
 <head>
-<title>wiki2html: no title</title>
+<title>header</title>
 </head>
 <body>
 before
-<h1>header</h1>
+<h1 id='header_0'>header</h1>
 after
-<h2>test == asdf asdf asdf asdf</h2>
+<h2 id='header_1'>test == asdf asdf asdf asdf</h2>
 
 asdf === test3 ===
 

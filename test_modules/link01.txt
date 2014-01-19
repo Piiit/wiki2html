@@ -1,3 +1,4 @@
+~~NOTOC~~
 Simple link with protocol: [[http://www.google.de]]
 Simple link without protocol: [[www.unibz.it]]
 Link with a name (piped): [[www.unibz.it|Uni BZ]]

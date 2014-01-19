@@ -1,16 +1,26 @@
 <!doctype html>
 <html>
 <head>
-<title>wiki2html: no title</title>
+<title>This is an example generated with wiki2html</title>
 </head>
 <body>
+<div id='toc'><b>Table of content:</b><br />
+<ul>
+<li><a href='#header_0'>This is an example generated with wiki2html</a></li>
+<li><a href='#header_1'>What is that?</a></li>
+<li><a href='#header_2'>Some features</a></li>
+<li><a href='#header_3'>More information</a></li>
+<li><a href='#header_4'>Is that free?</a></li>
+<li><a href='#header_5'>Who wrote it?</a></li>
+<li><a href='#header_6'>Okay now something serious, lets test something more</a></li>
+</ul></div>
 
 
-<h1>This is an example generated with wiki2html</h1>
+<h1 id='header_0'>This is an example generated with wiki2html</h1>
 Welcome from Lorenzo & Peter!
-<h2>What is that?</h2>
+<h2 id='header_1'>What is that?</h2>
 This is a <b>wiki</b> parser basically, where you can easily produce HTML-compliant files in a go.
-<h2>Some features</h2>
+<h2 id='header_2'>Some features</h2>
 <ul>
 <li>implements wiki syntax (<a href='http://en.wikipedia.org/wiki/Creole_%28markup%29'>creole wiki markup</a>)</li>
 <li>produces HTML compliant output</li>
@@ -18,13 +28,13 @@ This is a <b>wiki</b> parser basically, where you can easily produce HTML-compli
 <li>free and portable</li>
 </ul>
 
-<h2>More information</h2>
+<h2 id='header_3'>More information</h2>
 You can find more information about the syntax <a href='http://www.wikicreole.org/wiki/AllMarkup'>here</a>
-<h2>Is that free?</h2>
+<h2 id='header_4'>Is that free?</h2>
 Yes it is absolutely <i>free</i> and <i>open source</i>.
-<h2>Who wrote it?</h2>
+<h2 id='header_5'>Who wrote it?</h2>
 Lorenzo & Peter for a Compilers course project.
-<h2>Okay now something serious, lets test something more</h2>
+<h2 id='header_6'>Okay now something serious, lets test something more</h2>
 Printing an undefined variable ->  <- no result as in PHP, just a warning when compiling...
 
 </body>

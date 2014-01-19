@@ -1,16 +1,23 @@
 <!doctype html>
 <html>
 <head>
-<title>wiki2html: no title</title>
+<title>This is an example generated with wiki2html</title>
 </head>
 <body>
-<h1>This is an example generated with wiki2html</h1>
+<div id='toc'><b>Table of content:</b><br />
+<ul>
+<li><a href='#header_0'>This is an example generated with wiki2html</a></li>
+<li><a href='#header_1'>What is that?</a></li>
+<li><a href='#header_2'>Is that free?</a></li>
+<li><a href='#header_3'>Who wrote it?</a></li>
+</ul></div>
+<h1 id='header_0'>This is an example generated with wiki2html</h1>
 Welcome from Lorenzo & Peter!
-<h2>What is that?</h2>
+<h2 id='header_1'>What is that?</h2>
 This is a <b>wiki</b> parser basically, where you can easily produce HTML-compliant files in a go.
-<h2>Is that free?</h2>
+<h2 id='header_2'>Is that free?</h2>
 Yes it is absolutely <i>free</i> and <i>open source</i>.
-<h2>Who wrote it?</h2>
+<h2 id='header_3'>Who wrote it?</h2>
 Lorenzo & Peter for a Compilers course project.
 </body>
 </html>

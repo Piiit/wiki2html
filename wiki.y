@@ -58,7 +58,7 @@ struct wiki_scope* scope_go_up(void)
 
 bool has_toc = true;
 bool has_title = false;
-char title[512] = "wiki2html: (no title)";
+char title[512] = "wiki2html: no title";
 char toc[4096] = "";
 int toc_id = 0;
 char wikitext[10000] = "";

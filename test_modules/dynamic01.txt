@@ -1,3 +1,4 @@
+~~NOTOC~~
 {{x:="111"}}
 Variable x has the value "{{x}}".
 {{x := "ValueX"  }}

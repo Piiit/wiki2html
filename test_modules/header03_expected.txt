@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
 <head>
-<title>wiki2html: no title</title>
+<title>header</title>
 </head>
 <body>
-<h1>header</h1>
-<h2>header 2</h2>
+<h1 id='header_0'>header</h1>
+<h2 id='header_1'>header 2</h2>
 </body>
 </html>
 

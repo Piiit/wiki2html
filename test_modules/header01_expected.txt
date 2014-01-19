@@ -1,17 +1,17 @@
 <!doctype html>
 <html>
 <head>
-<title>wiki2html: no title</title>
+<title>first line</title>
 </head>
 <body>
-<h2>first line</h2>
+<h2 id='header_0'>first line</h2>
 before
-<h1>header</h1>
+<h1 id='header_1'>header</h1>
 this is a header.
 
-<h2>header with trailing whitespaces</h2>
+<h2 id='header_2'>header with trailing whitespaces</h2>
 
-<h2>header with trailing equal signs ==</h2>
+<h2 id='header_3'>header with trailing equal signs ==</h2>
 </body>
 </html>
 

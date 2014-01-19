@@ -1,3 +1,4 @@
+~~NOTOC~~
 ==first line==
 before
 =header=
