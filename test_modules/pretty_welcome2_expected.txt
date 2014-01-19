@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<title>wiki2html: no title</title>
+</head>
+<body>
+
+
+<h1>This is an example generated with wiki2html</h1>
+Welcome from Lorenzo & Peter!
+<h2>What is that?</h2>
+This is a <b>wiki</b> parser basically, where you can easily produce HTML-compliant files in a go.
+<h2>Some features</h2>
+<ul>
+<li>implements wiki syntax (<a href='http://en.wikipedia.org/wiki/Creole_%28markup%29'>creole wiki markup</a>)</li>
+<li>produces HTML compliant output</li>
+<li>easy to use</li>
+<li>free and portable</li>
+</ul>
+
+<h2>More information</h2>
+You can find more information about the syntax <a href='http://www.wikicreole.org/wiki/AllMarkup'>here</a>
+<h2>Is that free?</h2>
+Yes it is absolutely <i>free</i> and <i>open source</i>.
+<h2>Who wrote it?</h2>
+Lorenzo & Peter for a Compilers course project.
+<h2>Okay now something serious, lets test something more</h2>
+Printing an undefined variable ->  <- no result as in PHP, just a warning when compiling...
+
+</body>
+</html>
