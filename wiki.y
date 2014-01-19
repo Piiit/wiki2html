@@ -445,15 +445,15 @@ int main(void)
 	int err = yyparse();
 	
 	printf("<!doctype html>\n<html>\n<head>\n<title>%s</title>\n</head>\n<body>\n", title);
-	if(has_toc) {
+
+	// has_title is true, iff there is at least one header!
+	if(has_toc && has_title) {
 		printf("<div id='toc'><b>Table of content:</b><br />\n<ul>\n%s</ul></div>\n", toc);
 	}
 	printf("%s", wikitext);
 	printf("</body>\n</html>\n");
     int i = 0;
-//    fprintf(stderr, "Final symbol table lenght: %d\n", symbol_table_length(table));
-    for (i; i < scope_num; i++)
-        print_symbol_table(scope_history[i]);
-//    symbol_table_free();
+    //for (i; i < scope_num; i++)
+    //    print_symbol_table(scope_history[i]);
     return err;
 }
