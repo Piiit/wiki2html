@@ -56,12 +56,12 @@ struct wiki_scope* scope_go_up(void)
     current_scope = current_scope->parent;
 }
 
+char *wikitext = NULL;
 bool has_toc = true;
 bool has_title = false;
 char title[512] = "wiki2html: no title";
 char toc[4096] = "";
 int toc_id = 0;
-char wikitext[10000] = "";
 
 %}
 
@@ -129,7 +129,8 @@ char wikitext[10000] = "";
 wikitext
 	: /* empty */
 	| wikitext block {
-			sprintf(wikitext, "%s%s", wikitext, $2);
+			//sprintf(wikitext, "%s%s", wikitext, $2);
+			wikitext = produce_output(wikitext, $2, NULL);
         }
 	| wikitext END_OF_FILE {
 			/* END_OF_FILE reached, force yyparse return */
@@ -440,9 +441,7 @@ int main(void)
     /* Symbol table initialization and test */
     global_scope = scope_init();
     current_scope = global_scope;
-//    fprintf(stderr, "Initial symbol table size: %d\n", symbol_table_length(table));
-//    if (table == NULL)
-//        fprintf(stderr, "Unable to allocate memory for symbol table\n")
+
 	int err = yyparse();
 	
 	printf("<!doctype html>\n<html>\n<head>\n<title>%s</title>\n</head>\n<body>\n", title);
