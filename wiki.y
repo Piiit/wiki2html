@@ -305,11 +305,11 @@ header
 			
 			// Too many equal signs? Produce output as "text"... 
 			char *equalsigns = trim(strdup($4->lexeme));
+			char buf3[512] = "";
+			char buf4[1024] = "";
 			if(level < strlen(equalsigns)) {
-				char buf3[512];
-				char buf4[1024];
 				snprintf(buf3, strlen($4->lexeme) - level + 1, "%s", $4->lexeme);			
-				snprintf(buf4, sizeof buf4, "%s%s", buf3, buf2);
+				snprintf(buf4, sizeof buf4, "%s%s\0", buf3, buf2);
             	$$ = produce_output(buf1, $3, buf4);
 			} else {
 				$$ = produce_output(buf1, $3, buf2);
@@ -317,10 +317,11 @@ header
 
 			if(!has_title) {
 				has_title = true;
-				strcpy(title, trim(strdup($3)));
+				strcpy(title, $3);
+				strcat(title, buf3);
 			}
 
-			sprintf(toc, "%s<li><a href='#header_%d'>%s</a></li>\n", toc, toc_id, trim(strdup($3)));
+			sprintf(toc, "%s<li><a href='#header_%d'>%s%s</a></li>\n", toc, toc_id, $3, buf3);
 			toc_id++;
             scope_go_up();
         }

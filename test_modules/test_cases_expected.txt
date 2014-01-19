@@ -6,7 +6,7 @@
 <body>
 <div id='toc'><b>Table of content:</b><br />                    
 <ul>                                                            
-<li><a href='#header_0'>head = er 2</a></li>                    
+<li><a href='#header_0'>head = er 2 =</a></li>                    
 <li><a href='#header_1'>this is a header (level 1)</a></li>     
 </ul></div>                                                     
 Before everything...
