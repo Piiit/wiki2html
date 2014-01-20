@@ -458,7 +458,7 @@ int main(void)
 
 	// has_title is true, iff there is at least one header!
 	if(has_toc && has_title) {
-		printf("<div id='toc'><b>Table of content:</b><br />\n<ul>\n%s</ul></div>\n", toc);
+		printf("<div id='toc' style='float: right; margin-left: 30px; border-left: 1px solid gray; padding: 10px'><b>Table of content:</b><br />\n<ul>\n%s</ul></div>\n", toc);
 	}
 	printf("%s", wikitext);
 	printf("</body>\n</html>\n");
