@@ -4,7 +4,7 @@
 <title>head = er 2 =</title>
 </head>
 <body>
-<div id='toc'><b>Table of content:</b><br />                    
+<div id='toc' style='float: right; margin-left: 30px; border-left: 1px solid gray; padding: 10px'><b>Table of content:</b><br />                    
 <ul>                                                            
 <li><a href='#header_0'>head = er 2 =</a></li>                    
 <li><a href='#header_1'>this is a header (level 1)</a></li>     

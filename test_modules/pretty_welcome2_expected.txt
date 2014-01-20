@@ -4,7 +4,7 @@
 <title>This is an example generated with wiki2html</title>
 </head>
 <body>
-<div id='toc'><b>Table of content:</b><br />
+<div id='toc' style='float: right; margin-left: 30px; border-left: 1px solid gray; padding: 10px'><b>Table of content:</b><br />
 <ul>
 <li><a href='#header_0'>This is an example generated with wiki2html</a></li>
 <li><a href='#header_1'>What is that?</a></li>
