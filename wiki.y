@@ -81,6 +81,8 @@ int toc_id = 0;
 %token <node> LIST_ITEM_ENTRY
 %token <node> LIST_ITEM_EXIT
 %token LIST_EXIT
+%token LIST_ENTRY
+%token NEWLINE 
 %token <node> DYNAMIC_ENTRY
 %token <node> DYNAMIC_EXIT
 %token <node> DYNAMIC_STRING
@@ -113,6 +115,7 @@ int toc_id = 0;
 %type <result> header
 %type <result> header_content
 %type <result> header_parts
+%type <result> list_items 
 %type <result> list_item 
 %type <result> list_item_content
 %type <result> list_item_parts
@@ -144,9 +147,7 @@ block
 	| notoc {
 			$$ = "";
 		} 
-	| list 	{
-			$$ = produce_output("<ul>\n", $1, "</ul>\n");
-		}
+	| list 
 	;
 
 notoc
@@ -341,17 +342,22 @@ header_parts
 	;
 
 list
-	: list_item LIST_EXIT {
-			$$ = produce_output($1, NULL, NULL);
+	: LIST_ENTRY {
+			set_new_scope("list");
 		}
-	| list_item END_OF_FILE {
-			$$ = produce_output($1, NULL, NULL);
-		}
-	| list_item list {
-			$$ = produce_output($1, $2, NULL);
+	list_items 
+	LIST_EXIT {
+			$$ = produce_output("\n<ul>\n", $3, "</ul>\n");
+			scope_go_up();
 		} 
 	;
 
+list_items
+	: list_item 
+	| list_item list_items {
+			$$ = produce_output($1, $2, NULL);
+		}
+	;
 list_item
     : LIST_ITEM_ENTRY {
             set_new_scope("list_item");
@@ -361,7 +367,7 @@ list_item
             $$ = produce_output("<li>", $3, "</li>\n");
             scope_go_up();
         }
-	;
+    ;
 
 list_item_content 
 	: list_item_parts

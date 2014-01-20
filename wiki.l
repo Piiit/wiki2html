@@ -39,8 +39,9 @@ UNDERLINE			"__"
 MONOSPACE			"\'\'"
 HEADER_ENTRY		^("=")+{WS}*
 HEADER_EXIT			{WS}*"="+{WS}*{NEWLINE}
-LIST_ITEM_ENTRY		^({WS}*\*{WS})
+LIST_ITEM_ENTRY		({NEWLINE}?{WS}*\*[^\*]{WS}*)
 LIST_ITEM_EXIT		{NEWLINE}
+LIST_ENTRY			^{LIST_ITEM_ENTRY}	
 LIST_EXIT			({WS}*[^\*])
 DYNAMIC_ENTRY		"{{"
 DYNAMIC_EXIT		"}}"
@@ -179,8 +180,17 @@ NO_TOC				"~~NOTOC~~"
 	return HEADER_EXIT;
 }
 
+{LIST_ENTRY} {
+	BEGIN LIST;
+	lexer_states_push(LIST);
 
-<*>{LIST_ITEM_ENTRY} { 
+	yyless(0);
+
+	fprintf(stderr, "LIST_ENTRY (state=%d): %s\n", last_state, yytext);
+	return LIST_ENTRY;
+}
+
+<LIST>{LIST_ITEM_ENTRY} { 
 	BEGIN LIST_ITEM;
 	lexer_states_push(LIST_ITEM);
 
@@ -190,16 +200,17 @@ NO_TOC				"~~NOTOC~~"
 }
 
 <LIST_ITEM>{LIST_ITEM_EXIT} {
-	// Return to default scope
-	lexer_states_pop();
-	BEGIN LIST; 
-
+	BEGIN lexer_states_pop();
+	
+	//yyless(0);
+	
 	fprintf(stderr, "LIST_ITEM_EXIT: %s\n", yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);
 	return LIST_ITEM_EXIT;
 }
 
 <LIST>{LIST_EXIT} {
+	//lexer_states_pop();
 	BEGIN lexer_states_pop();
 	fprintf(stderr, "LIST_EXIT: %s\n", yytext);
 	

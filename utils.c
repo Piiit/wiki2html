@@ -40,7 +40,9 @@ void lexer_states_push(int state) {
 }
 
 int lexer_states_pop(void) {
-	lexer_state--;
+	if(lexer_state > 0) {
+		lexer_state--;
+	}
 	fprintf(stderr, "LEXER STATE (pop): #%d = %d\n", lexer_state, lexer_states[lexer_state]);
 	return lexer_states[lexer_state];
 }
