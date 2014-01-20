@@ -54,6 +54,7 @@ LINK_URL			([\w]+?:\/\/)*[^ \"\n\r\t<\]\|]+
 LINK_SEPARATOR		[\| ]
 LINK_NAME			{LINK_SEPARATOR}[^\]]*
 NO_TOC				"~~NOTOC~~"
+HRULE				^"----"-*{WS}*{NEWLINE}
 
 %%
 
@@ -68,6 +69,10 @@ NO_TOC				"~~NOTOC~~"
 
 {NO_TOC} {
 	return NO_TOC;
+}
+
+{HRULE} {
+	return HRULE;
 }
 
 <LINK>{LINK_EXIT} {
@@ -193,6 +198,16 @@ NO_TOC				"~~NOTOC~~"
 <LIST>{LIST_ITEM_ENTRY} { 
 	BEGIN LIST_ITEM;
 	lexer_states_push(LIST_ITEM);
+
+	//Restore "bold" check: one symbol after the first '*'
+	char *test = trim(yytext);
+	int test_len = strlen(test);
+	int back = 1;
+	if(strlen(test) > 1) {
+		while(test_len > back && test[test_len - back] != '*' ) back++;
+		yyless(test_len - back + 1);
+	}
+	//printf("test: '%c'\n", test[strlen(test) - 1]);
 
 	fprintf(stderr, "LIST_ITEM_ENTRY (state=%d): %s\n", last_state, yytext);
 	yylval.node = create_node(strdup(yytext), yylineno);

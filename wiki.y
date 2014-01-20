@@ -95,6 +95,7 @@ int toc_id = 0;
 %token <node> LINK_NAME
 %token LINK_SEPARATOR
 %token NO_TOC
+%token HRULE 
 
 /*%type <result> wikitext*/
 %type <result> block
@@ -147,7 +148,10 @@ block
 	| notoc {
 			$$ = "";
 		} 
-	| list 
+	| list  
+	| HRULE {
+			$$ = "\n<hr />\n";
+		}
 	;
 
 notoc
@@ -311,7 +315,7 @@ header
 			char buf4[1024] = "";
 			if(level < strlen(equalsigns)) {
 				snprintf(buf3, strlen($4->lexeme) - level + 1, "%s", $4->lexeme);			
-				snprintf(buf4, sizeof buf4, "%s%s\0", buf3, buf2);
+				snprintf(buf4, sizeof buf4, "%s%s", buf3, buf2);
             	$$ = produce_output(buf1, $3, buf4);
 			} else {
 				$$ = produce_output(buf1, $3, buf2);
