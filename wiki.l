@@ -55,6 +55,7 @@ LINK_SEPARATOR		[\| ]
 LINK_NAME			{LINK_SEPARATOR}[^\]]*
 NO_TOC				"~~NOTOC~~"
 HRULE				^"----"-*{WS}*{NEWLINE}
+BREAK				"\\\\"
 
 %%
 
@@ -73,6 +74,10 @@ HRULE				^"----"-*{WS}*{NEWLINE}
 
 {HRULE} {
 	return HRULE;
+}
+
+{BREAK} {
+	return BREAK;
 }
 
 <LINK>{LINK_EXIT} {
@@ -204,7 +209,7 @@ HRULE				^"----"-*{WS}*{NEWLINE}
 	int test_len = strlen(test);
 	int back = 1;
 	if(strlen(test) > 1) {
-		while(test_len > back && test[test_len - back] != '*' ) back++;
+		while(test_len > back && test[test_len - back] != '*') back++;
 		yyless(test_len - back + 1);
 	}
 	//printf("test: '%c'\n", test[strlen(test) - 1]);

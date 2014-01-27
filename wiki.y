@@ -96,6 +96,7 @@ int toc_id = 0;
 %token LINK_SEPARATOR
 %token NO_TOC
 %token HRULE 
+%token BREAK 
 
 /*%type <result> wikitext*/
 %type <result> block
@@ -152,6 +153,9 @@ block
 	| list  
 	| HRULE {
 			$$ = "\n<hr />\n";
+		}
+	| BREAK {
+			$$ = "\n<br />\n";
 		}
 	;
 
@@ -317,7 +321,7 @@ header
 			if(level < strlen(equalsigns)) {
 				snprintf(buf3, strlen($4->lexeme) - level + 1, "%s", $4->lexeme);			
 				snprintf(buf4, sizeof buf4, "%s%s", buf3, buf2);
-            	$$ = produce_output(buf1, $3, buf4);
+				$$ = produce_output(buf1, $3, buf4);
 			} else {
 				$$ = produce_output(buf1, $3, buf2);
 			}
@@ -351,10 +355,18 @@ list
 			set_new_scope("list");
 		}
 	list_items 
-	LIST_EXIT {
+	list_exit {
 			$$ = produce_output("\n<ul>\n", $3, "</ul>\n");
 			scope_go_up();
 		} 
+	;
+
+list_exit
+	: LIST_EXIT
+	| END_OF_FILE
+	| error { 
+			yyerrok;
+		 }
 	;
 
 list_items
@@ -368,11 +380,18 @@ list_item
             set_new_scope("list_item");
         }
     list_item_content
-    LIST_ITEM_EXIT {
+    list_item_exit {
             $$ = produce_output("<li>", $3, "</li>\n");
             scope_go_up();
         }
     ;
+
+list_item_exit
+	: LIST_ITEM_EXIT
+	| error {
+			yyerrok;
+		}
+	;
 
 list_item_content 
 	: list_item_parts
@@ -397,9 +416,9 @@ dynamic
 dynamic_assignment
 	: DYNAMIC_ID DYNAMIC_ASSIG DYNAMIC_STRING {
             bool overwrite = false;
-	        struct wiki_node* variable = find_identifier($1->lexeme, current_scope);
-	        if (variable != NULL)
-	        {
+			struct wiki_node* variable = find_identifier($1->lexeme, current_scope);
+			if (variable != NULL)
+			{
                 /* If we find a variable, check for its scope */
                 if (variable->scope == current_scope)
                 {
@@ -407,9 +426,9 @@ dynamic_assignment
                     variable->value = strdup($3->lexeme);
                     overwrite = true;
                 }
-	        }
-	        if (!overwrite)
-	        {
+			}
+			if (!overwrite)
+			{
                 add_symbol($1, current_scope);
                 /* Set it to variable type */
                 $1->type = TYPE_VARIABLE;
@@ -461,7 +480,9 @@ int main(void)
 	if(has_toc && has_title) {
 		printf("<div id='toc' style='float: right; margin-left: 30px; border-left: 1px solid gray; padding: 10px'><b>Table of content:</b><br />\n<ul>\n%s</ul></div>\n", toc);
 	}
-	printf("%s", wikitext);
+	if(wikitext != NULL) {
+		printf("%s", wikitext);
+	}
 	printf("</body>\n</html>\n");
     int i = 0;
     //for (i; i < scope_num; i++)
