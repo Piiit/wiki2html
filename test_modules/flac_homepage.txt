@@ -1,41 +1,41 @@
 = Formal Languages and Compilers -- A.Y. 2013/2014 =
 
 **Free University of Bozen-Bolzano
-<br />
+\\
 Faculty of Computer Science
-<br />
+\\
 Bachelor in Computer Science and Engineering (BSc)**
-<br />
+\\
 
 ----
 
 This page contains the material relevant to //Formal Languages and Compilers (academic Year: 2013/14 -- First Semester)// 
-module including lecture handouts and practical material. All enquiries regarding the module should be addressed to [[mailto:artale@inf.unibz.it|Dr. Alessandro Artale]].<br />
+module including lecture handouts and practical material. All enquiries regarding the module should be addressed to [[mailto:artale@inf.unibz.it|Dr. Alessandro Artale]].\\
 The course has also a practical aspect with Lab exercises concerning the construction of a compiler for a sub-language of the "C" programming language.
 
 ----
 == SYLLABUS ==
-	* [[http//www.unibz.it/en/inf/progs/courses/Documents/CPFs%202013-2014/cpf_FormalLanguagesAndCompilers_2013-2014_v1.pdf|Course Syllabus]]
+	* [[http://www.unibz.it/en/inf/progs/courses/Documents/CPFs%202013-2014/cpf_FormalLanguagesAndCompilers_2013-2014_v1.pdf|Course Syllabus]]
 
 ----
 == LECTURES ==
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide1.pdf|1. Introduction to Compilers]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide2.pdf|2. Formal Languages Theory: Grammars and Language Classification]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide3-CFL-NormalForms.pdf|3. Normal Form and Properties of CFL's by J. Ullman]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide4-FA.pdf|4. Regular Languages and Finite Automata]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide4-Intro-FA.pdf|4.1 Introduction to Finite Automata by J. Ullman]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide4-NFA.pdf|4.2 Non-Deterministic Finite Automata by J. Ullman]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide4-JU-RE-properties.pdf|4.3 Properties of Regular Languages by J. Ullman]] 
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide5-PT-CFG.pdf|5. Parse Trees and Ambiguous Grammars]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide6-Lexer.pdf|6. Lexical Analysis]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide7.1-intro-parser.pdf|7.1. Syntactic Analysis---Part 1]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/lecture-berkley.pdf|7.2. Syntactic Analysis---Part 2]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide7.2-bu-parser.pdf|7.3. Syntactic Analysis---Part 3]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide7.3-LR-parser.pdf|7.4. Syntactic Analysis---Part 4]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide8-semantics.pdf|8. Semantic Analysis Formalism: Syntax Directed Translation]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide9-type-chek.pdf|9. Semantic Analysis: Type Checking and Symbol Table]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide10-InterCodeGen.pdf|10. Intermediate Code Generation]]
-    * [[http//www.inf.unibz.it/~artale/Compiler/slide11-Opt.pdf|11. Code Optimization]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide1.pdf|1. Introduction to Compilers]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide2.pdf|2. Formal Languages Theory: Grammars and Language Classification]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide3-CFL-NormalForms.pdf|3. Normal Form and Properties of CFL's by J. Ullman]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide4-FA.pdf|4. Regular Languages and Finite Automata]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide4-Intro-FA.pdf|4.1 Introduction to Finite Automata by J. Ullman]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide4-NFA.pdf|4.2 Non-Deterministic Finite Automata by J. Ullman]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide4-JU-RE-properties.pdf|4.3 Properties of Regular Languages by J. Ullman]] 
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide5-PT-CFG.pdf|5. Parse Trees and Ambiguous Grammars]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide6-Lexer.pdf|6. Lexical Analysis]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide7.1-intro-parser.pdf|7.1. Syntactic Analysis---Part 1]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/lecture-berkley.pdf|7.2. Syntactic Analysis---Part 2]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide7.2-bu-parser.pdf|7.3. Syntactic Analysis---Part 3]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide7.3-LR-parser.pdf|7.4. Syntactic Analysis---Part 4]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide8-semantics.pdf|8. Semantic Analysis Formalism: Syntax Directed Translation]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide9-type-chek.pdf|9. Semantic Analysis: Type Checking and Symbol Table]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide10-InterCodeGen.pdf|10. Intermediate Code Generation]]
+    * [[http://www.inf.unibz.it/~artale/Compiler/slide11-Opt.pdf|11. Code Optimization]]
 
 ----
 == TUTORIALS for the LAB ==
@@ -64,22 +64,22 @@ The course has also a practical aspect with Lab exercises concerning the constru
 == PROJECT -- 30% of the Final Mark ==
 
 Students will be involved in a project concerning the development of a Compiler. Students should form teams of 2/3 people and decide the language to implement.
-<br />
+\\
 The deadline to [[mailto:artale@inf.unibz.it|email]] the project is: **Monday, 20th of January, 2014**. 
 
 ----
 == PROJECT PRESENTATION ==
 
-The project discussion will be in Room E431 on: **Thursday, 23rd of January, 2014 starting at 9:40am**. [[http://www.inf.unibz.it/~artale/Compiler/Timetable-Compiler-13.pdf|Schedule File]].<br />
+The project discussion will be in Room E431 on: **Thursday, 23rd of January, 2014 starting at 9:40am**. [[http://www.inf.unibz.it/~artale/Compiler/Timetable-Compiler-13.pdf|Schedule File]].\\
 To be included in the schedule send me an [[mailto:artale@inf.unibz.it|email]]. 
 
 ----
 == MID-TERM Exam -- 11.Nov.2013 -- 10:30-12:30 ==
 
 Topics of the Mid-Term exam are: Formal Language Theory, Notions of Grammar and Derivation, Context-Free-Languages and Context-Free-Grammars, Normal Forms for CFLs, Regular Languages and Regular Expressions, Determinist nad Non-deterministic Finite Automata, Parse Trees and Ambiguous Grammars.
-<br />
+\\
 Students who pass the mid-term exam can avoid the part of the final exam concerning Formal Languages.
-<br />
+\\
 Mid-Term exam: [[http://www.inf.unibz.it/~artale/Compiler/MidTerm-2013.pdf|Results]]
 
 

@@ -127,6 +127,7 @@ int toc_id = 0;
 %type <result> link 
 
 %start wikitext
+%left TEXT
 
 %%
 
